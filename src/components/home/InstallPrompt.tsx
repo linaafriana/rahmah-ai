@@ -77,7 +77,7 @@ export function InstallPrompt() {
               </div>
               <div className="flex-1 pr-6">
                 <p className="text-sm font-bold text-ink">
-                  Pasang Sakinah di layarmu
+                  Pasang Rahmah di layarmu
                 </p>
                 <p className="mt-0.5 text-[11px] text-ink-soft">
                   Akses lebih cepat, tanpa membuka browser

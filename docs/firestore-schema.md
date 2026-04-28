@@ -1,6 +1,6 @@
 # Firestore schema
 
-All client-facing collections used by Sakinah Companion. Keys with `{uid}` are scoped to the signed-in user's UID.
+All client-facing collections used by Rahmah. Keys with `{uid}` are scoped to the signed-in user's UID.
 
 ## Collections
 

@@ -1,5 +1,5 @@
 export const id = {
-  appName: "Sakinah Companion",
+  appName: "Rahmah",
 
   onboarding: {
     title: "Mulai perjalananmu kembali kepada Allah 🌱",

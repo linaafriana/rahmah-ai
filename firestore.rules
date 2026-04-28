@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// Sakinah Companion — Firestore security rules.
+// Rahmah — Firestore security rules.
 // Each user can read & write only their own data.
 // Public/editorial collections (reflections, lessons) are read-only for everyone.
 

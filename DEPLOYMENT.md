@@ -1,6 +1,6 @@
 # Deployment Guide
 
-End-to-end checklist for shipping Sakinah Companion to production. Estimated time: **30–45 minutes** for a fresh setup.
+End-to-end checklist for shipping Rahmah to production. Estimated time: **30–45 minutes** for a fresh setup.
 
 ## Stack overview
 

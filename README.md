@@ -1,4 +1,4 @@
-# Sakinah Companion
+# Rahmah
 
 A mobile-first, gentle Islamic companion web app — soft pastel UI, organic shapes, calm copy in Bahasa Indonesia. Built to feel like a safe space, not a productivity tracker.
 

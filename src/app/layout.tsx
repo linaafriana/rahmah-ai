@@ -6,7 +6,7 @@ import { AuthProvider } from "@/providers/AuthProvider";
 import "./globals.css";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://sakinah.example.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://rahmah.example.com";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -24,17 +24,17 @@ const amiri = Amiri({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Sakinah Companion",
-    template: "%s · Sakinah Companion",
+    default: "Rahmah",
+    template: "%s · Rahmah",
   },
   description:
     "Teman lembut untuk perjalanan kembali kepada Allah — sholat, dzikir, Quran, dan ilmu agama dalam satu tempat yang tenang.",
-  applicationName: "Sakinah Companion",
+  applicationName: "Rahmah",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Sakinah",
+    title: "Rahmah",
   },
   icons: {
     icon: "/icons/icon.svg",
@@ -44,14 +44,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     url: SITE_URL,
-    siteName: "Sakinah Companion",
-    title: "Sakinah Companion",
+    siteName: "Rahmah",
+    title: "Rahmah",
     description:
       "Teman lembut untuk perjalanan kembali kepada Allah — sholat, dzikir, Quran, dan ilmu agama.",
   },
   twitter: {
     card: "summary",
-    title: "Sakinah Companion",
+    title: "Rahmah",
     description: "Teman lembut untuk perjalanan kembali kepada Allah",
   },
   robots: {
