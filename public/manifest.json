@@ -1,0 +1,20 @@
+{
+  "name": "Sakinah Companion",
+  "short_name": "Sakinah",
+  "description": "Teman lembut untuk perjalanan kembali kepada Allah",
+  "start_url": "/home",
+  "display": "standalone",
+  "background_color": "#FFF6F0",
+  "theme_color": "#5DB3A6",
+  "orientation": "portrait",
+  "lang": "id",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "education", "spiritual"]
+}

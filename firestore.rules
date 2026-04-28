@@ -1,0 +1,61 @@
+rules_version = '2';
+
+// Sakinah Companion — Firestore security rules.
+// Each user can read & write only their own data.
+// Public/editorial collections (reflections, lessons) are read-only for everyone.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helpers
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // ─── Per-user collections ────────────────────────────────
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // userProgress/{uid}/prayers/{date}
+    // userProgress/{uid}/meta/quranPosition
+    match /userProgress/{uid}/{document=**} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // journals/{uid}/entries/{date}
+    match /journals/{uid}/{document=**} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // dzikirLogs/{uid}/daily/{date}
+    match /dzikirLogs/{uid}/{document=**} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // bookmarks/{uid}/verses/{verseKey}
+    match /bookmarks/{uid}/{document=**} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // ─── Editorial/public collections (read-only) ────────────
+    // Editors must use Firebase Admin SDK or Console to write.
+    match /reflections/{date} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /lessons/{slug} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Default deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

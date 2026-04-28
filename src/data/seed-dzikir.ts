@@ -1,0 +1,68 @@
+import type { DzikirItem } from "@/types";
+
+export const seedDzikir: DzikirItem[] = [
+  {
+    id: "subhanallah-morning",
+    category: "morning",
+    arabic: "سُبْحَانَ ٱللَّٰهِ وَبِحَمْدِهِ",
+    transliteration: "Subḥānallāhi wa biḥamdihi",
+    meaning: "Maha Suci Allah dan segala puji bagi-Nya",
+    defaultCount: 100,
+  },
+  {
+    id: "ayat-kursi-morning",
+    category: "morning",
+    arabic: "ٱللَّٰهُ لَآ إِلَٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ",
+    transliteration: "Allāhu lā ilāha illā huwal-ḥayyul-qayyūm",
+    meaning: "Allah, tiada Tuhan selain Dia, Yang Maha Hidup, Maha Berdiri Sendiri",
+    defaultCount: 1,
+  },
+  {
+    id: "hasbunallah-morning",
+    category: "morning",
+    arabic: "حَسْبُنَا ٱللَّٰهُ وَنِعْمَ ٱلْوَكِيلُ",
+    transliteration: "Ḥasbunallāhu wa ni'mal-wakīl",
+    meaning: "Cukuplah Allah bagi kami, dan Dia sebaik-baik pelindung",
+    defaultCount: 7,
+  },
+  {
+    id: "subhanallah-evening",
+    category: "evening",
+    arabic: "سُبْحَانَ ٱللَّٰهِ وَبِحَمْدِهِ",
+    transliteration: "Subḥānallāhi wa biḥamdihi",
+    meaning: "Maha Suci Allah dan segala puji bagi-Nya",
+    defaultCount: 100,
+  },
+  {
+    id: "audzu-evening",
+    category: "evening",
+    arabic: "أَعُوذُ بِكَلِمَاتِ ٱللَّٰهِ ٱلتَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+    transliteration: "A'ūdhu bikalimātillāhit-tāmmāti min sharri mā khalaq",
+    meaning: "Aku berlindung dengan kalimat Allah yang sempurna dari kejahatan makhluk-Nya",
+    defaultCount: 3,
+  },
+  {
+    id: "subhanallah-after",
+    category: "afterPrayer",
+    arabic: "سُبْحَانَ ٱللَّٰهِ",
+    transliteration: "Subḥānallāh",
+    meaning: "Maha Suci Allah",
+    defaultCount: 33,
+  },
+  {
+    id: "alhamdulillah-after",
+    category: "afterPrayer",
+    arabic: "ٱلْحَمْدُ لِلَّٰهِ",
+    transliteration: "Alḥamdulillāh",
+    meaning: "Segala puji bagi Allah",
+    defaultCount: 33,
+  },
+  {
+    id: "allahuakbar-after",
+    category: "afterPrayer",
+    arabic: "ٱللَّٰهُ أَكْبَرُ",
+    transliteration: "Allāhu Akbar",
+    meaning: "Allah Maha Besar",
+    defaultCount: 34,
+  },
+];
