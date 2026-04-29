@@ -14,6 +14,8 @@ import {
   getTimings,
   nextPrayer,
   prayerLabels,
+  readUserMethod,
+  readUserTune,
   type TimingsResponse,
 } from "@/lib/prayer";
 import { id as t } from "@/lib/i18n/id";
@@ -33,7 +35,10 @@ export function PrayerCard({ value, onChange }: Props) {
   useEffect(() => {
     if (!coords) return;
     let alive = true;
-    void getTimings(coords.latitude, coords.longitude).then((tng) => {
+    void getTimings(coords.latitude, coords.longitude, {
+      method: readUserMethod(),
+      tune: readUserTune(),
+    }).then((tng) => {
       if (alive && tng) setTimings(tng);
     });
     return () => {

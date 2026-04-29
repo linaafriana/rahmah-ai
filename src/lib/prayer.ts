@@ -16,23 +16,98 @@ export type PrayerTimings = {
 };
 
 export type TimingsResponse = {
-  date: { readable: string; gregorian: { date: string }; hijri: { date: string; month: { en: string; ar: string }; year: string; day: string } };
+  date: {
+    readable: string;
+    gregorian: { date: string };
+    hijri: {
+      date: string;
+      month: { en: string; ar: string };
+      year: string;
+      day: string;
+    };
+  };
   timings: PrayerTimings;
-  meta: { latitude: number; longitude: number; timezone: string; method: { id: number; name: string } };
+  meta: {
+    latitude: number;
+    longitude: number;
+    timezone: string;
+    method: { id: number; name: string };
+  };
 };
 
-const METHOD_KEMENAG = 20; // Kemenag (Indonesia)
+// ─── Calculation methods (Aladhan-supported) ──────────────
+export const PRAYER_METHODS = [
+  { id: 20, name: "Kemenag (Indonesia)" },
+  { id: 3, name: "Muslim World League (MWL)" },
+  { id: 17, name: "JAKIM (Malaysia)" },
+  { id: 11, name: "MUIS (Singapore)" },
+  { id: 5, name: "Egyptian General Authority" },
+  { id: 4, name: "Umm Al-Qura (Makkah)" },
+] as const;
+
+export const DEFAULT_METHOD = 20; // Kemenag
+
+// ─── Per-prayer offset tuning (in minutes) ────────────────
+// Aladhan accepts: tune=Imsak,Fajr,Sunrise,Dhuhr,Sunset,Maghrib,Isha,Midnight,Asr
+// (yes — the order is unusual; Asr is last)
+export type TuneOffsets = {
+  Imsak: number;
+  Fajr: number;
+  Sunrise: number;
+  Dhuhr: number;
+  Sunset: number;
+  Maghrib: number;
+  Isha: number;
+  Midnight: number;
+  Asr: number;
+};
+
+export const ZERO_TUNE: TuneOffsets = {
+  Imsak: 0,
+  Fajr: 0,
+  Sunrise: 0,
+  Dhuhr: 0,
+  Sunset: 0,
+  Maghrib: 0,
+  Isha: 0,
+  Midnight: 0,
+  Asr: 0,
+};
+
+function tuneToString(t: TuneOffsets): string {
+  return `${t.Imsak},${t.Fajr},${t.Sunrise},${t.Dhuhr},${t.Sunset},${t.Maghrib},${t.Isha},${t.Midnight},${t.Asr}`;
+}
+
+export type GetTimingsOptions = {
+  date?: Date;
+  method?: number;
+  tune?: TuneOffsets;
+};
 
 export async function getTimings(
   lat: number,
   lon: number,
-  date = new Date(),
-  method = METHOD_KEMENAG,
+  options: GetTimingsOptions = {},
 ): Promise<TimingsResponse | null> {
+  const date = options.date ?? new Date();
+  const method = options.method ?? DEFAULT_METHOD;
+  const tune = options.tune ?? ZERO_TUNE;
+
   const dd = String(date.getDate()).padStart(2, "0");
   const mm = String(date.getMonth() + 1).padStart(2, "0");
   const yyyy = date.getFullYear();
-  const url = `${BASE}/timings/${dd}-${mm}-${yyyy}?latitude=${lat}&longitude=${lon}&method=${method}`;
+
+  const params = new URLSearchParams({
+    latitude: String(lat),
+    longitude: String(lon),
+    method: String(method),
+  });
+  // Only attach tune if any offset is non-zero — keep URL clean
+  if (Object.values(tune).some((v) => v !== 0)) {
+    params.set("tune", tuneToString(tune));
+  }
+
+  const url = `${BASE}/timings/${dd}-${mm}-${yyyy}?${params}`;
   const res = await fetch(url, { next: { revalidate: 60 * 30 } });
   if (!res.ok) return null;
   const data = (await res.json()) as { data: TimingsResponse };
@@ -57,7 +132,41 @@ export async function getQibla(
   return data.data;
 }
 
-// --- Prayer-name labels (Indonesian) ---
+// ─── User settings persistence ────────────────────────────
+const METHOD_KEY = "sakinah:prayerMethod";
+const TUNE_KEY = "sakinah:prayerTune";
+
+export function readUserMethod(): number {
+  if (typeof window === "undefined") return DEFAULT_METHOD;
+  const v = window.localStorage.getItem(METHOD_KEY);
+  if (!v) return DEFAULT_METHOD;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : DEFAULT_METHOD;
+}
+
+export function writeUserMethod(method: number): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(METHOD_KEY, String(method));
+}
+
+export function readUserTune(): TuneOffsets {
+  if (typeof window === "undefined") return ZERO_TUNE;
+  const raw = window.localStorage.getItem(TUNE_KEY);
+  if (!raw) return ZERO_TUNE;
+  try {
+    const parsed = JSON.parse(raw);
+    return { ...ZERO_TUNE, ...parsed };
+  } catch {
+    return ZERO_TUNE;
+  }
+}
+
+export function writeUserTune(tune: TuneOffsets): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(TUNE_KEY, JSON.stringify(tune));
+}
+
+// ─── Prayer-name labels (Indonesian) ──────────────────────
 
 export const prayerLabels: Record<keyof PrayerTimings, string> = {
   Imsak: "Imsak",

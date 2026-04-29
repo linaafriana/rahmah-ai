@@ -23,6 +23,8 @@ import {
   mainPrayers,
   nextPrayer,
   prayerLabels,
+  readUserMethod,
+  readUserTune,
   type PrayerTimings,
   type QiblaResponse,
   type TimingsResponse,
@@ -41,7 +43,10 @@ export default function JadwalPage() {
     setLoading(true);
     setError(null);
     Promise.all([
-      getTimings(coords.latitude, coords.longitude),
+      getTimings(coords.latitude, coords.longitude, {
+        method: readUserMethod(),
+        tune: readUserTune(),
+      }),
       getQibla(coords.latitude, coords.longitude),
     ])
       .then(([t, q]) => {
@@ -161,6 +166,20 @@ export default function JadwalPage() {
               Hijriah: {data.date.hijri.day} {data.date.hijri.month.en}{" "}
               {data.date.hijri.year} · {data.meta.method.name} ·{" "}
               {data.meta.timezone}
+            </p>
+          </Card>
+
+          <Card tone="cream" className="border border-ink/5">
+            <p className="text-xs leading-relaxed text-ink-soft">
+              Jadwal ini dihitung secara otomatis. Selisih 1–3 menit dari
+              jadwal masjid setempat adalah hal yang wajar.{" "}
+              <Link
+                href="/pengaturan"
+                className="font-semibold text-primary hover:underline"
+              >
+                Sesuaikan di Pengaturan
+              </Link>{" "}
+              jika perlu.
             </p>
           </Card>
 

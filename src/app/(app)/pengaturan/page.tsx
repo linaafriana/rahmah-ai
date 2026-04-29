@@ -4,20 +4,40 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowLeft, Check, LogOut, MapPin } from "lucide-react";
+import { ArrowLeft, Check, Clock, LogOut, MapPin } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/providers/AuthProvider";
 import { RECITERS, DEFAULT_RECITER_ID } from "@/lib/quran";
+import {
+  DEFAULT_METHOD,
+  PRAYER_METHODS,
+  ZERO_TUNE,
+  readUserMethod,
+  readUserTune,
+  writeUserMethod,
+  writeUserTune,
+  type TuneOffsets,
+} from "@/lib/prayer";
 
 const RECITER_KEY = "sakinah:reciterPref";
 const NAME_KEY = "sakinah:displayName";
+
+const tuneFields: Array<{ key: keyof TuneOffsets; label: string }> = [
+  { key: "Fajr", label: "Subuh" },
+  { key: "Dhuhr", label: "Dzuhur" },
+  { key: "Asr", label: "Ashar" },
+  { key: "Maghrib", label: "Maghrib" },
+  { key: "Isha", label: "Isya" },
+];
 
 export default function PengaturanPage() {
   const router = useRouter();
   const { user, signOut } = useAuth();
   const [name, setName] = useState("");
   const [reciterId, setReciterId] = useState<number>(DEFAULT_RECITER_ID);
+  const [method, setMethod] = useState<number>(DEFAULT_METHOD);
+  const [tune, setTune] = useState<TuneOffsets>(ZERO_TUNE);
   const [saved, setSaved] = useState(false);
   const [hasLocation, setHasLocation] = useState(false);
 
@@ -27,15 +47,28 @@ export default function PengaturanPage() {
     const r = window.localStorage.getItem(RECITER_KEY);
     if (r) setReciterId(Number(r) || DEFAULT_RECITER_ID);
     setHasLocation(!!window.localStorage.getItem("sakinah:coords"));
+    setMethod(readUserMethod());
+    setTune(readUserTune());
   }, [user]);
 
   function save() {
     if (typeof window !== "undefined") {
       if (name.trim()) window.localStorage.setItem(NAME_KEY, name.trim());
       window.localStorage.setItem(RECITER_KEY, String(reciterId));
+      writeUserMethod(method);
+      writeUserTune(tune);
     }
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+  }
+
+  function updateTune(key: keyof TuneOffsets, value: number) {
+    const clamped = Math.max(-30, Math.min(30, value));
+    setTune({ ...tune, [key]: clamped });
+  }
+
+  function resetTune() {
+    setTune(ZERO_TUNE);
   }
 
   function clearLocation() {
@@ -66,6 +99,8 @@ export default function PengaturanPage() {
       window.location.reload();
     }
   }
+
+  const tuneActive = Object.values(tune).some((v) => v !== 0);
 
   return (
     <motion.div
@@ -124,6 +159,87 @@ export default function PengaturanPage() {
             </option>
           ))}
         </select>
+      </Card>
+
+      <Card tone="white">
+        <div className="flex items-center gap-2">
+          <Clock size={14} className="text-primary" />
+          <h2 className="text-sm font-bold text-ink">Jadwal Sholat</h2>
+        </div>
+        <p className="mt-1 text-[11px] text-ink-soft">
+          Pilih metode perhitungan dan sesuaikan jadwal jika berbeda 1–3
+          menit dari masjid setempat.
+        </p>
+
+        <label className="mt-3 block">
+          <span className="mb-1 block text-xs font-medium text-ink-soft">
+            Metode perhitungan
+          </span>
+          <select
+            value={method}
+            onChange={(e) => setMethod(Number(e.target.value))}
+            className="w-full appearance-none rounded-card border border-ink/10 bg-background px-4 py-3 text-sm text-ink outline-none focus:border-primary"
+          >
+            {PRAYER_METHODS.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <div className="mt-4">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs font-medium text-ink-soft">
+              Penyesuaian per sholat (menit)
+            </span>
+            {tuneActive && (
+              <button
+                type="button"
+                onClick={resetTune}
+                className="text-[11px] font-medium text-ink-muted hover:text-primary"
+              >
+                Reset
+              </button>
+            )}
+          </div>
+          <div className="space-y-2">
+            {tuneFields.map(({ key, label }) => (
+              <div
+                key={key}
+                className="flex items-center justify-between gap-3 rounded-card bg-background px-3 py-2"
+              >
+                <span className="text-sm text-ink">{label}</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => updateTune(key, tune[key] - 1)}
+                    aria-label={`${label} -1 menit`}
+                    className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm text-ink shadow-soft hover:bg-primary-tint"
+                  >
+                    −
+                  </button>
+                  <span className="w-12 text-center text-sm font-mono font-semibold text-ink">
+                    {tune[key] > 0 ? `+${tune[key]}` : tune[key]}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => updateTune(key, tune[key] + 1)}
+                    aria-label={`${label} +1 menit`}
+                    className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm text-ink shadow-soft hover:bg-primary-tint"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 text-[11px] text-ink-muted">
+            Nilai negatif memajukan, positif memundurkan. Maksimal ±30
+            menit. Banyak yang setel: Subuh −2, Isya −3 untuk cocok dengan
+            jadwal Kemenag resmi.
+          </p>
+        </div>
       </Card>
 
       <Card tone="white">
