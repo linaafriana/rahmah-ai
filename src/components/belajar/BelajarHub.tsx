@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, Sparkles } from "lucide-react";
+import { ChevronRight, Search, Sparkles, X } from "lucide-react";
 import clsx from "clsx";
 import { Card } from "@/components/ui/Card";
 import { Tabs } from "@/components/ui/Tabs";
@@ -49,10 +49,25 @@ const tabItems: { value: TabValue; label: string }[] = [
 
 export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
   const [tab, setTab] = useState<TabValue>("all");
+  const [query, setQuery] = useState("");
 
   const grouped = useMemo(() => {
-    const filtered =
+    const q = query.trim().toLowerCase();
+    let filtered =
       tab === "all" ? topics : topics.filter((t) => t.category === tab);
+    if (q) {
+      filtered = filtered.filter((topic) => {
+        const haystack = [
+          topic.title,
+          topic.description,
+          topic.intro,
+          ...topic.items.map((it) => it.title),
+        ]
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(q);
+      });
+    }
     const groups: Record<LearnLevel, LearnTopic[]> = {
       pemula: [],
       menengah: [],
@@ -60,7 +75,10 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
     };
     for (const topic of filtered) groups[topic.level].push(topic);
     return groups;
-  }, [tab, topics]);
+  }, [tab, topics, query]);
+
+  const totalResults =
+    grouped.pemula.length + grouped.menengah.length + grouped.lanjutan.length;
 
   const starterTopics = useMemo(() => {
     const map = new Map(topics.map((t) => [t.slug, t]));
@@ -69,7 +87,7 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
       .filter((t): t is LearnTopic => Boolean(t));
   }, [topics]);
 
-  const showStarter = tab === "all";
+  const showStarter = tab === "all" && !query.trim();
 
   return (
     <div className="space-y-5">
@@ -78,11 +96,45 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
         <p className="mt-1 text-sm text-ink-soft">{t.belajar.subtitle}</p>
       </header>
 
+      <label className="relative block">
+        <Search
+          size={16}
+          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-muted"
+        />
+        <input
+          type="text"
+          inputMode="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Cari topik — wudhu, sabar, hijaiyah…"
+          className="w-full rounded-pill border border-ink/5 bg-white py-2.5 pl-10 pr-10 text-sm text-ink shadow-soft outline-none placeholder:text-ink-muted focus:ring-2 focus:ring-primary/30"
+        />
+        {query && (
+          <button
+            type="button"
+            onClick={() => setQuery("")}
+            aria-label="Hapus pencarian"
+            className="absolute right-3 top-1/2 -translate-y-1/2 flex h-6 w-6 items-center justify-center rounded-full text-ink-muted hover:bg-ink/5 hover:text-ink"
+          >
+            <X size={12} />
+          </button>
+        )}
+      </label>
+
       <div className="-mx-1 overflow-x-auto pb-1 no-scrollbar">
         <div className="min-w-max px-1">
           <Tabs items={tabItems} value={tab} onChange={setTab} />
         </div>
       </div>
+
+      {query.trim() && totalResults === 0 && (
+        <Card tone="cream" className="border border-ink/5">
+          <p className="text-center text-sm text-ink-soft">
+            Tidak ditemukan topik dengan kata &ldquo;{query.trim()}&rdquo;.
+            Coba kata lain.
+          </p>
+        </Card>
+      )}
 
       {showStarter && (
         <Card tone="cream" className="overflow-hidden border border-ink/5">

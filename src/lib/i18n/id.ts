@@ -9,14 +9,27 @@ export const id = {
 
   signIn: {
     title: "Selamat datang kembali 🌷",
+    titleSignUp: "Selamat datang 🌷",
     subtitle: "Masuk untuk melanjutkan perjalananmu",
+    subtitleSignUp: "Daftar untuk menyimpan progresmu",
     emailLabel: "Email",
     passwordLabel: "Kata sandi",
     submit: "Masuk",
     google: "Lanjutkan dengan Google",
     noAccount: "Belum punya akun?",
     signUp: "Daftar di sini",
-    errorInvalid: "Email atau kata sandi belum sesuai",
+    errors: {
+      invalidEmail: "Format email belum sesuai",
+      userNotFound: "Belum ada akun dengan email ini",
+      wrongPassword: "Kata sandi belum sesuai",
+      emailInUse: "Email ini sudah terdaftar — coba masuk",
+      weakPassword: "Kata sandi terlalu pendek (minimal 6 karakter)",
+      tooManyRequests: "Terlalu banyak percobaan. Coba lagi sebentar.",
+      networkError: "Tidak ada koneksi. Cek internetmu.",
+      popupBlocked: "Popup diblokir browser. Izinkan popup untuk Google sign-in.",
+      popupClosed: "Login Google dibatalkan",
+      generic: "Terjadi kendala. Coba lagi sebentar.",
+    },
   },
 
   nav: {

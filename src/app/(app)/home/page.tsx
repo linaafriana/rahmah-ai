@@ -23,6 +23,7 @@ import { AsmaulHusnaCard } from "@/components/home/AsmaulHusnaCard";
 import { BulanHijriahCard } from "@/components/home/BulanHijriahCard";
 import { InstallPrompt } from "@/components/home/InstallPrompt";
 import { MockModeBanner } from "@/components/home/MockModeBanner";
+import { StarterPathCard } from "@/components/home/StarterPathCard";
 import { HomeSkeleton } from "@/components/home/HomeSkeleton";
 import { reflectionForToday } from "@/data/seed-reflections";
 import { useAuth } from "@/providers/AuthProvider";
@@ -140,6 +141,11 @@ export default function HomePage() {
       </motion.div>
       <motion.div variants={item}>
         <QuickActionsRow />
+      </motion.div>
+
+      {/* Starter path — 3 topics from onboarding focus, dismissible */}
+      <motion.div variants={item}>
+        <StarterPathCard />
       </motion.div>
 
       {/* ── 2. PRIMARY DAILY ACTION — the prayers ─────────── */}

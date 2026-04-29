@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ChevronRight, BookmarkCheck } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowLeft, ChevronRight, BookmarkCheck, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { useAuth } from "@/providers/AuthProvider";
-import { loadBookmarks } from "@/lib/firebase/firestore";
+import {
+  loadBookmarks,
+  deleteBookmark,
+} from "@/lib/firebase/firestore";
 import type { VerseBookmark } from "@/types";
 
 const LOCAL_KEY = "sakinah:bookmarks";
@@ -21,6 +25,11 @@ function readLocal(): VerseBookmark[] {
   } catch {
     return [];
   }
+}
+
+function writeLocal(items: VerseBookmark[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(LOCAL_KEY, JSON.stringify(items));
 }
 
 function dedupe(items: VerseBookmark[]): VerseBookmark[] {
@@ -56,6 +65,13 @@ export default function BookmarksPage() {
       alive = false;
     };
   }, [user]);
+
+  function remove(id: string) {
+    const next = items.filter((b) => b.id !== id);
+    setItems(next);
+    writeLocal(next);
+    if (user) void deleteBookmark(user.uid, id);
+  }
 
   return (
     <div className="space-y-5">
@@ -96,9 +112,9 @@ export default function BookmarksPage() {
               ? `/quran/${bm.surahNumber}?page=${page}`
               : `/quran/${bm.surahNumber}`;
           return (
-            <Link key={bm.id} href={href} className="block">
-              <Card tone="white">
-                <div className="flex items-start justify-between gap-3">
+            <Card key={bm.id} tone="white" className="relative">
+              <Link href={href} className="block">
+                <div className="flex items-start gap-3 pr-8">
                   <div className="flex-1">
                     <p className="text-xs font-semibold uppercase tracking-widest text-primary/80">
                       QS. {bm.surahName} : {bm.ayahNumber}
@@ -115,10 +131,22 @@ export default function BookmarksPage() {
                       </p>
                     )}
                   </div>
-                  <ChevronRight size={18} className="mt-1 text-ink-muted" />
+                  <ChevronRight
+                    size={18}
+                    className="mt-1 shrink-0 text-ink-muted"
+                  />
                 </div>
-              </Card>
-            </Link>
+              </Link>
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.9 }}
+                onClick={() => remove(bm.id)}
+                className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-background text-ink-muted hover:bg-rose-50 hover:text-rose-500"
+                aria-label="Hapus penanda"
+              >
+                <Trash2 size={14} />
+              </motion.button>
+            </Card>
           );
         })}
       </div>

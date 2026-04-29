@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Blob } from "@/components/illustrations/Blob";
 import { useAuth } from "@/providers/AuthProvider";
+import { authErrorMessage } from "@/lib/auth-errors";
 import { id as t } from "@/lib/i18n/id";
 
 export default function SignInPage() {
@@ -36,7 +37,7 @@ export default function SignInPage() {
       router.push("/home");
     } catch (err) {
       console.error(err);
-      setError(t.signIn.errorInvalid);
+      setError(authErrorMessage(err));
     } finally {
       setBusy(false);
     }
@@ -50,7 +51,7 @@ export default function SignInPage() {
       router.push("/home");
     } catch (err) {
       console.error(err);
-      setError(t.signIn.errorInvalid);
+      setError(authErrorMessage(err));
     } finally {
       setBusy(false);
     }
@@ -77,9 +78,11 @@ export default function SignInPage() {
         className="relative z-10"
       >
         <h1 className="mb-2 text-3xl font-bold text-ink">
-          {t.signIn.title}
+          {mode === "signup" ? t.signIn.titleSignUp : t.signIn.title}
         </h1>
-        <p className="mb-2 text-ink-soft">{t.signIn.subtitle}</p>
+        <p className="mb-2 text-ink-soft">
+          {mode === "signup" ? t.signIn.subtitleSignUp : t.signIn.subtitle}
+        </p>
         {!configured && (
           <p className="mb-4 rounded-card bg-accent-tint px-3 py-2 text-xs text-ink-soft">
             Mode demo: kunci Firebase belum dikonfigurasi. Login akan disimpan
