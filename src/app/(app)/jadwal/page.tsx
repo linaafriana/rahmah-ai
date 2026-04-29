@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { QiblaCompass } from "@/components/jadwal/QiblaCompass";
 import { useLocation } from "@/hooks/useLocation";
+import { reverseGeocode, type ReverseGeoResult } from "@/lib/geo";
 import {
   cleanTime,
   formatCountdown,
@@ -34,6 +35,7 @@ export default function JadwalPage() {
   const { coords, status, request, reset } = useLocation();
   const [data, setData] = useState<TimingsResponse | null>(null);
   const [qibla, setQibla] = useState<QiblaResponse | null>(null);
+  const [geo, setGeo] = useState<ReverseGeoResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,8 +50,9 @@ export default function JadwalPage() {
         tune: readUserTune(),
       }),
       getQibla(coords.latitude, coords.longitude),
+      reverseGeocode(coords.latitude, coords.longitude),
     ])
-      .then(([t, q]) => {
+      .then(([t, q, g]) => {
         if (!alive) return;
         if (!t) {
           setError("Tidak dapat memuat jadwal sholat. Coba lagi nanti.");
@@ -57,6 +60,7 @@ export default function JadwalPage() {
           setData(t);
         }
         if (q) setQibla(q);
+        if (g) setGeo(g);
       })
       .catch(() => {
         if (alive) setError("Tidak dapat memuat jadwal sholat. Coba lagi nanti.");
@@ -81,9 +85,16 @@ export default function JadwalPage() {
 
       <header>
         <h1 className="text-3xl font-bold text-ink">Jadwal & Kiblat</h1>
-        <p className="mt-1 text-sm text-ink-soft">
-          Waktu sholat dan arah kiblat untuk lokasimu
-        </p>
+        {geo ? (
+          <p className="mt-1 inline-flex items-center gap-1 text-sm text-ink-soft">
+            <MapPin size={13} className="text-primary" />
+            <span>Berdasarkan lokasimu di {geo.display}</span>
+          </p>
+        ) : (
+          <p className="mt-1 text-sm text-ink-soft">
+            Waktu sholat dan arah kiblat untuk lokasimu
+          </p>
+        )}
       </header>
 
       {!coords && (
@@ -162,10 +173,12 @@ export default function JadwalPage() {
                 />
               ))}
             </ul>
-            <p className="mt-3 text-[11px] text-ink-muted">
+            <p className="mt-3 text-[11px] leading-relaxed text-ink-muted">
               Hijriah: {data.date.hijri.day} {data.date.hijri.month.en}{" "}
-              {data.date.hijri.year} · {data.meta.method.name} ·{" "}
-              {data.meta.timezone}
+              {data.date.hijri.year}
+              <br />
+              {geo && <>📍 {geo.display} · </>}
+              {data.meta.method.name} · {data.meta.timezone}
             </p>
           </Card>
 

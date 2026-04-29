@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/Card";
 import { Check } from "lucide-react";
 import { ProgressRing } from "@/components/ui/ProgressRing";
 import { useLocation } from "@/hooks/useLocation";
+import { reverseGeocode, type ReverseGeoResult } from "@/lib/geo";
 import {
   formatCountdown,
   getTimings,
@@ -31,6 +32,7 @@ type Props = {
 export function PrayerCard({ value, onChange }: Props) {
   const { coords, status, request } = useLocation();
   const [timings, setTimings] = useState<TimingsResponse | null>(null);
+  const [geo, setGeo] = useState<ReverseGeoResult | null>(null);
 
   useEffect(() => {
     if (!coords) return;
@@ -40,6 +42,9 @@ export function PrayerCard({ value, onChange }: Props) {
       tune: readUserTune(),
     }).then((tng) => {
       if (alive && tng) setTimings(tng);
+    });
+    void reverseGeocode(coords.latitude, coords.longitude).then((g) => {
+      if (alive && g) setGeo(g);
     });
     return () => {
       alive = false;
@@ -97,6 +102,12 @@ export function PrayerCard({ value, onChange }: Props) {
                 {formatCountdown(next.minutesUntil)} lagi
                 {next.nextDay ? " (besok)" : ""}
               </p>
+              {geo && (
+                <p className="mt-1 inline-flex items-center gap-1 text-[10px] text-ink-muted">
+                  <MapPin size={10} className="text-primary" />
+                  <span className="truncate">{geo.display}</span>
+                </p>
+              )}
             </div>
             <ChevronRight size={16} className="text-ink-muted" />
           </div>
