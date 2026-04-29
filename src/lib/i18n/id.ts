@@ -30,6 +30,15 @@ export const id = {
       popupClosed: "Login Google dibatalkan",
       generic: "Terjadi kendala. Coba lagi sebentar.",
     },
+    forgotPassword: "Lupa kata sandi?",
+    resetTitle: "Reset kata sandi",
+    resetSubtitle:
+      "Masukkan emailmu — kami kirim link untuk membuat kata sandi baru.",
+    resetSubmit: "Kirim link reset",
+    resetEmailLabel: "Email",
+    resetSent:
+      "Link reset sudah dikirim. Cek email (termasuk folder spam) lalu ikuti instruksinya.",
+    resetBackToSignIn: "Kembali ke halaman masuk",
   },
 
   nav: {

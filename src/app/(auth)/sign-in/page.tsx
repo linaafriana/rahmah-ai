@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
@@ -112,6 +113,16 @@ export default function SignInPage() {
             <Button type="submit" fullWidth size="lg" disabled={busy}>
               {mode === "signup" ? t.signIn.signUp : t.signIn.submit}
             </Button>
+            {mode === "signin" && (
+              <div className="text-center">
+                <Link
+                  href="/reset-password"
+                  className="text-xs font-medium text-ink-soft hover:text-primary"
+                >
+                  {t.signIn.forgotPassword}
+                </Link>
+              </div>
+            )}
           </form>
 
           <div className="flex items-center gap-3 py-1 text-xs text-ink-muted">

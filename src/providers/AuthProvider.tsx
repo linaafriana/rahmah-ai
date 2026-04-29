@@ -12,12 +12,14 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut as fbSignOut,
   type User as FbUser,
 } from "firebase/auth";
 import { firebaseAuth, isFirebaseConfigured } from "@/lib/firebase/client";
+import { migrateLocalDataToFirestore } from "@/lib/firebase/migration";
 
 export type SessionUser = {
   uid: string;
@@ -34,6 +36,7 @@ type AuthContextValue = {
   signUp: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -94,6 +97,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsub = onAuthStateChanged(firebaseAuth, (u) => {
       setUser(u ? toSessionUser(u) : null);
       setLoading(false);
+      // Best-effort: migrate local data to Firestore on first sign-in.
+      // Idempotent — guarded by sakinah:migratedFor:{uid} flag.
+      if (u) void migrateLocalDataToFirestore(u.uid);
     });
     return () => unsub();
   }, []);
@@ -143,6 +149,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           clearMock();
           setUser(null);
         }
+      },
+      async resetPassword(email) {
+        if (!firebaseAuth) {
+          // In mock mode there's no real account — just no-op success
+          return;
+        }
+        await sendPasswordResetEmail(firebaseAuth, email);
       },
     };
   }, [user, loading]);
