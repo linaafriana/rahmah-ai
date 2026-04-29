@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { Card } from "@/components/ui/Card";
 import { useAuth } from "@/providers/AuthProvider";
 import { loadJournalsInRange } from "@/lib/firebase/firestore";
+import { localDateKey } from "@/lib/date";
 import { id as t } from "@/lib/i18n/id";
 import type { Mood } from "@/types";
 
@@ -41,9 +42,7 @@ const moodHeight: Record<Mood, number> = {
 
 const dayLabels = ["Sn", "Sl", "Rb", "Km", "Jm", "Sb", "Mg"];
 
-function isoDate(d: Date) {
-  return d.toISOString().slice(0, 10);
-}
+const isoDate = localDateKey;
 
 function buildLastSevenDays(): Date[] {
   const days: Date[] = [];

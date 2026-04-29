@@ -5,14 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check } from "lucide-react";
 import clsx from "clsx";
 import { Card } from "@/components/ui/Card";
+import { localDateKey } from "@/lib/date";
 import { id as t } from "@/lib/i18n/id";
 
 const STORAGE_KEY = (date: string) => `sakinah:micro:${date}`;
 const SHOWN = 5;
 
-function isoDate(d: Date = new Date()) {
-  return d.toISOString().slice(0, 10);
-}
+const isoDate = localDateKey;
 
 // Deterministic 5-of-pool selection per day (so it stays stable across the day)
 function pickToday(pool: typeof t.microHabits.pool, dateKey: string) {

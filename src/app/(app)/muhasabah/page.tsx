@@ -8,6 +8,7 @@ import { ArrowLeft, Check, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Blob } from "@/components/illustrations/Blob";
+import { localDateKey, tomorrowKey } from "@/lib/date";
 
 const STORAGE_KEY = (date: string) => `sakinah:muhasabah:${date}`;
 
@@ -18,9 +19,7 @@ type Answers = {
   niatBesok: string;
 };
 
-function todayKey() {
-  return new Date().toISOString().slice(0, 10);
-}
+const todayKey = localDateKey;
 
 const presetSyukur = [
   "Sholat 5 waktu",
@@ -73,10 +72,10 @@ export default function MuhasabahPage() {
     }
     // Also save niat for tomorrow
     if (next.niatBesok.trim()) {
-      const t = new Date();
-      t.setDate(t.getDate() + 1);
-      const tomorrowKey = t.toISOString().slice(0, 10);
-      window.localStorage.setItem(`sakinah:niat:${tomorrowKey}`, next.niatBesok.trim());
+      window.localStorage.setItem(
+        `sakinah:niat:${tomorrowKey()}`,
+        next.niatBesok.trim(),
+      );
     }
   }
 

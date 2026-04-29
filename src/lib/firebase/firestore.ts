@@ -13,6 +13,7 @@ import {
   type Firestore,
 } from "firebase/firestore";
 import { firestore } from "@/lib/firebase/client";
+import { localDateKey } from "@/lib/date";
 import type {
   PrayerProgress,
   JournalEntry,
@@ -21,9 +22,8 @@ import type {
   VerseBookmark,
 } from "@/types";
 
-export function todayKey(date = new Date()) {
-  return date.toISOString().slice(0, 10);
-}
+/** Returns YYYY-MM-DD in the user's local timezone (NOT UTC). */
+export const todayKey = localDateKey;
 
 function requireDb(): Firestore | null {
   return firestore;

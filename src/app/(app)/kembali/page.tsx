@@ -11,15 +11,10 @@ import { Blob } from "@/components/illustrations/Blob";
 import { DzikirCounter } from "@/components/dzikir/DzikirCounter";
 import { useAuth } from "@/providers/AuthProvider";
 import { bumpDzikirCount } from "@/lib/firebase/firestore";
+import { tomorrowKey } from "@/lib/date";
 import { id as t } from "@/lib/i18n/id";
 
 const NIAT_KEY = (date: string) => `sakinah:niat:${date}`;
-
-function tomorrowKey() {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  return d.toISOString().slice(0, 10);
-}
 
 export default function KembaliPage() {
   const router = useRouter();

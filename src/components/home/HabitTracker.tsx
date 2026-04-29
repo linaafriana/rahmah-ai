@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 import { Pencil, Plus, Trash2, Check } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { localDateKey } from "@/lib/date";
 import { id as t } from "@/lib/i18n/id";
 
 const STATE_KEY = "sakinah:habits";
@@ -15,9 +16,7 @@ const dayLabels = ["Sn", "Sl", "Rb", "Km", "Jm", "Sb", "Mg"];
 type HabitState = Record<string, Record<string, boolean>>; // habitId -> dateKey -> done
 type CustomHabit = { id: string; label: string };
 
-function isoDate(d: Date) {
-  return d.toISOString().slice(0, 10);
-}
+const isoDate = localDateKey;
 
 function buildLastSevenDays(): Date[] {
   const days: Date[] = [];

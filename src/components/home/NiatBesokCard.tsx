@@ -6,19 +6,12 @@ import { Sparkles, Pencil, Check } from "lucide-react";
 import clsx from "clsx";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { localDateKey, tomorrowKey } from "@/lib/date";
 import { id as t } from "@/lib/i18n/id";
 
 const STORAGE_KEY = (date: string) => `sakinah:niat:${date}`;
 
-function todayKey() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function tomorrowKey() {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  return d.toISOString().slice(0, 10);
-}
+const todayKey = localDateKey;
 
 function getCurrentHour() {
   return new Date().getHours();

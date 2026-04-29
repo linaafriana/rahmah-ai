@@ -2,6 +2,8 @@
 // Primary source: Aladhan API (/v1/gToH/DD-MM-YYYY), cached daily in localStorage.
 // Fallback: Umm Al-Qura algorithmic conversion (approximation, ±1 day).
 
+import { localDateKey } from "./date";
+
 export type HijriDate = {
   day: number; // 1–30
   month: number; // 1–12
@@ -26,9 +28,7 @@ const HIJRI_MONTHS_ID = [
 
 const CACHE_KEY = (gKey: string) => `sakinah:hijri:${gKey}`;
 
-function gKey(d = new Date()): string {
-  return d.toISOString().slice(0, 10);
-}
+const gKey = localDateKey;
 
 /** Algorithmic Tabular Islamic conversion — close approximation, no network. */
 function approximateHijri(d: Date): HijriDate {

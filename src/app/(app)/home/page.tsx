@@ -23,6 +23,7 @@ import {
   loadQuranPosition,
   savePrayers,
 } from "@/lib/firebase/firestore";
+import { localDateKey } from "@/lib/date";
 import type { PrayerProgress, QuranPosition } from "@/types";
 
 // Below-the-fold cards — code-split to keep initial bundle lean.
@@ -83,6 +84,47 @@ export default function HomePage() {
   const [, setPosition] = useState<QuranPosition>(fallbackPosition);
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  // `dateKey` triggers a reload of daily-keyed state when the local date
+  // rolls over (midnight while the tab is open, or returning to a tab
+  // whose state was saved before midnight).
+  const [dateKey, setDateKey] = useState(() => localDateKey());
+
+  // Watch for date rollover: timer that fires at next local midnight,
+  // and also refresh when the tab regains focus (most common case for
+  // PWAs/mobile — user reopens in the morning).
+  useEffect(() => {
+    function refreshDate() {
+      const k = localDateKey();
+      setDateKey((prev) => (prev === k ? prev : k));
+    }
+    function scheduleMidnight() {
+      const now = new Date();
+      const nextMidnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+        0,
+        0,
+        5, // 5s buffer so getDate() definitely reads the new day
+      );
+      return window.setTimeout(refreshDate, nextMidnight.getTime() - now.getTime());
+    }
+    let timer = scheduleMidnight();
+    function onVisible() {
+      if (document.visibilityState === "visible") {
+        refreshDate();
+        clearTimeout(timer);
+        timer = scheduleMidnight();
+      }
+    }
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", refreshDate);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", refreshDate);
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -95,6 +137,9 @@ export default function HomePage() {
       const savedName = window.localStorage.getItem("sakinah:displayName");
       if (savedName) setDisplayName(savedName);
     }
+    // Reset to empty when the local date changes — guarantees the
+    // checklist renders blank before the new day's data arrives.
+    setProgress(emptyProgress);
     if (!user) {
       setHydrated(true);
       return;
@@ -103,7 +148,7 @@ export default function HomePage() {
     (async () => {
       try {
         const [p, q] = await Promise.all([
-          loadPrayers(user.uid),
+          loadPrayers(user.uid, dateKey),
           loadQuranPosition(user.uid),
         ]);
         if (!alive) return;
@@ -119,13 +164,13 @@ export default function HomePage() {
     return () => {
       alive = false;
     };
-  }, [user]);
+  }, [user, dateKey]);
 
   const name = displayName ?? user?.name ?? "Sahabat";
 
   function onPrayerChange(next: PrayerProgress) {
     setProgress(next);
-    if (user) void savePrayers(user.uid, next);
+    if (user) void savePrayers(user.uid, next, dateKey);
   }
 
   if (!hydrated) return <HomeSkeleton />;
