@@ -171,9 +171,17 @@ export default function PengaturanPage() {
           menit dari masjid setempat.
         </p>
 
+        <div className="mt-3 rounded-card bg-primary-tint/60 px-3 py-2 text-[11px] leading-relaxed text-ink-soft">
+          <span className="font-semibold text-primary">Otomatis Kemenag.</span>{" "}
+          Untuk lokasi di Indonesia, kami pakai jadwal Bimas Islam Kemenag RI
+          langsung — sama dengan jadwal masjid resmi. Pengaturan di bawah
+          dipakai sebagai cadangan untuk lokasi luar Indonesia atau jika
+          kotamu belum cocok.
+        </div>
+
         <label className="mt-3 block">
           <span className="mb-1 block text-xs font-medium text-ink-soft">
-            Metode perhitungan
+            Metode perhitungan (cadangan)
           </span>
           <select
             value={method}

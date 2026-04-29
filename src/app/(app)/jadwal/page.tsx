@@ -85,7 +85,14 @@ export default function JadwalPage() {
 
       <header>
         <h1 className="text-3xl font-bold text-ink">Jadwal & Kiblat</h1>
-        {geo ? (
+        {data?.meta.source?.kind === "equran" ? (
+          <p className="mt-1 inline-flex items-center gap-1 text-sm text-ink-soft">
+            <MapPin size={13} className="text-primary" />
+            <span>
+              Berdasarkan jadwal Kemenag untuk {data.meta.source.kabkota}
+            </span>
+          </p>
+        ) : geo ? (
           <p className="mt-1 inline-flex items-center gap-1 text-sm text-ink-soft">
             <MapPin size={13} className="text-primary" />
             <span>Berdasarkan lokasimu di {geo.display}</span>
@@ -173,12 +180,36 @@ export default function JadwalPage() {
                 />
               ))}
             </ul>
-            <p className="mt-3 text-[11px] leading-relaxed text-ink-muted">
+            <div className="mt-3 flex flex-wrap items-center gap-1.5">
+              {data.meta.source?.kind === "equran" ? (
+                <span className="inline-flex items-center gap-1 rounded-pill bg-primary-tint px-2 py-0.5 text-[10px] font-semibold text-primary">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  Kemenag · Resmi
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-pill bg-ink/5 px-2 py-0.5 text-[10px] font-semibold text-ink-soft">
+                  {data.meta.source?.label ?? data.meta.method.name}
+                </span>
+              )}
+              <span className="text-[11px] text-ink-muted">
+                · {data.meta.timezone}
+              </span>
+            </div>
+            <p className="mt-2 text-[11px] leading-relaxed text-ink-muted">
               Hijriah: {data.date.hijri.day} {data.date.hijri.month.en}{" "}
               {data.date.hijri.year}
-              <br />
-              {geo && <>📍 {geo.display} · </>}
-              {data.meta.method.name} · {data.meta.timezone}
+              {data.meta.source?.kind === "equran" && (
+                <>
+                  <br />
+                  📍 {data.meta.source.kabkota}, {data.meta.source.provinsi}
+                </>
+              )}
+              {data.meta.source?.kind !== "equran" && geo && (
+                <>
+                  <br />
+                  📍 {geo.display}
+                </>
+              )}
             </p>
           </Card>
 

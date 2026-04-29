@@ -1,5 +1,16 @@
-// Aladhan API client — https://aladhan.com/prayer-times-api
-// All endpoints are public and require no key.
+// Prayer-times client.
+//
+// Two backends, dispatched per location:
+//   • equran.id — official Bimas Islam Kemenag RI data. Used when the
+//     user is in Indonesia and we can map their geocoded city to one
+//     of the 517 supported kabkota. Times match printed mosque schedules.
+//   • Aladhan   — global fallback (any lat/lon). Also the source of
+//     Hijri date + Qibla bearing regardless of which backend serves
+//     prayer times, so we always co-call it for that metadata.
+//
+// Both APIs are public and require no key.
+
+import { getEquranTimings } from "./equran";
 
 const BASE = "https://api.aladhan.com/v1";
 
@@ -13,6 +24,17 @@ export type PrayerTimings = {
   Isha: string;
   Imsak: string;
   Midnight: string;
+};
+
+export type TimingsSource = {
+  /** Backend that produced the prayer times currently in `timings`. */
+  kind: "equran" | "aladhan";
+  /** Short human label for badges. */
+  label: string;
+  /** Only set when kind === 'equran'. */
+  kabkota?: string;
+  /** Only set when kind === 'equran'. */
+  provinsi?: string;
 };
 
 export type TimingsResponse = {
@@ -32,6 +54,7 @@ export type TimingsResponse = {
     longitude: number;
     timezone: string;
     method: { id: number; name: string };
+    source?: TimingsSource;
   };
 };
 
@@ -84,7 +107,7 @@ export type GetTimingsOptions = {
   tune?: TuneOffsets;
 };
 
-export async function getTimings(
+async function getAladhanTimings(
   lat: number,
   lon: number,
   options: GetTimingsOptions = {},
@@ -112,6 +135,82 @@ export async function getTimings(
   if (!res.ok) return null;
   const data = (await res.json()) as { data: TimingsResponse };
   return data.data;
+}
+
+/** Add `delta` minutes to "HH:MM" (or "HH:MM (tz)") and return "HH:MM". */
+function shiftTime(time: string, delta: number): string {
+  if (!time || delta === 0) return cleanTime(time);
+  const [h, m] = cleanTime(time).split(":").map(Number);
+  if (!Number.isFinite(h) || !Number.isFinite(m)) return cleanTime(time);
+  const wrap = 24 * 60;
+  let total = h * 60 + m + delta;
+  total = ((total % wrap) + wrap) % wrap;
+  const hh = String(Math.floor(total / 60)).padStart(2, "0");
+  const mm = String(total % 60).padStart(2, "0");
+  return `${hh}:${mm}`;
+}
+
+/**
+ * Dispatcher: returns the most accurate timings available for the
+ * given coords + date.
+ *
+ * Strategy: fire equran.id and Aladhan in parallel. We always need
+ * Aladhan for Hijri date + non-prayer fields (Sunset, Midnight),
+ * so the cost of always calling it is negligible. If equran returns
+ * a match, we overlay its 7 prayer-time fields onto the Aladhan
+ * response and tag the source as 'equran'. Tune offsets are applied
+ * client-side in that path (equran has no tune param).
+ */
+export async function getTimings(
+  lat: number,
+  lon: number,
+  options: GetTimingsOptions = {},
+): Promise<TimingsResponse | null> {
+  const date = options.date ?? new Date();
+  const tune = options.tune ?? ZERO_TUNE;
+
+  const [aladhan, equran] = await Promise.all([
+    getAladhanTimings(lat, lon, options),
+    getEquranTimings(lat, lon, date).catch(() => null),
+  ]);
+
+  if (!aladhan) return null;
+
+  if (equran) {
+    return {
+      ...aladhan,
+      timings: {
+        ...aladhan.timings,
+        Imsak: shiftTime(equran.timings.Imsak, tune.Imsak),
+        Fajr: shiftTime(equran.timings.Fajr, tune.Fajr),
+        Sunrise: shiftTime(equran.timings.Sunrise, tune.Sunrise),
+        Dhuhr: shiftTime(equran.timings.Dhuhr, tune.Dhuhr),
+        Asr: shiftTime(equran.timings.Asr, tune.Asr),
+        Maghrib: shiftTime(equran.timings.Maghrib, tune.Maghrib),
+        Isha: shiftTime(equran.timings.Isha, tune.Isha),
+      },
+      meta: {
+        ...aladhan.meta,
+        source: {
+          kind: "equran",
+          label: "Kemenag (Resmi)",
+          kabkota: equran.kabkota,
+          provinsi: equran.provinsi,
+        },
+      },
+    };
+  }
+
+  return {
+    ...aladhan,
+    meta: {
+      ...aladhan.meta,
+      source: {
+        kind: "aladhan",
+        label: aladhan.meta.method.name,
+      },
+    },
+  };
 }
 
 export type QiblaResponse = {

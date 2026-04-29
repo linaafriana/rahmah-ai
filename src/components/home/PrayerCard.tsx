@@ -102,12 +102,22 @@ export function PrayerCard({ value, onChange }: Props) {
                 {formatCountdown(next.minutesUntil)} lagi
                 {next.nextDay ? " (besok)" : ""}
               </p>
-              {geo && (
+              {timings?.meta.source?.kind === "equran" ? (
+                <p className="mt-1 inline-flex items-center gap-1 text-[10px] text-ink-muted">
+                  <MapPin size={10} className="text-primary" />
+                  <span className="truncate">
+                    {timings.meta.source.kabkota}
+                  </span>
+                  <span className="ml-0.5 inline-flex items-center gap-0.5 rounded-pill bg-primary-tint px-1.5 py-px text-[9px] font-bold text-primary">
+                    Kemenag
+                  </span>
+                </p>
+              ) : geo ? (
                 <p className="mt-1 inline-flex items-center gap-1 text-[10px] text-ink-muted">
                   <MapPin size={10} className="text-primary" />
                   <span className="truncate">{geo.display}</span>
                 </p>
-              )}
+              ) : null}
             </div>
             <ChevronRight size={16} className="text-ink-muted" />
           </div>
