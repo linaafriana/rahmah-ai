@@ -1,30 +1,51 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { GreetingHeader } from "@/components/home/GreetingHeader";
 import { PrayerCard } from "@/components/home/PrayerCard";
-import { ReflectionCard } from "@/components/home/ReflectionCard";
 import { QuranContinueCard } from "@/components/home/QuranContinueCard";
-import { JournalEntryCard } from "@/components/home/JournalEntryCard";
 import { DzikirTotalCard } from "@/components/home/DzikirTotalCard";
-import { DoaTodayCard } from "@/components/home/DoaTodayCard";
 import { PerasaanCard } from "@/components/home/PerasaanCard";
 import { NextPrayerCard } from "@/components/home/NextPrayerCard";
 import { QuickActionsRow } from "@/components/home/QuickActionsRow";
 import { NiatBesokCard } from "@/components/home/NiatBesokCard";
 import { MicroHabitsCard } from "@/components/home/MicroHabitsCard";
-import { HabitTracker } from "@/components/home/HabitTracker";
 import { KembaliBanner } from "@/components/home/KembaliBanner";
 import { TimeSpotlightCard } from "@/components/home/TimeSpotlightCard";
 import { SpecialDayBanner } from "@/components/home/SpecialDayBanner";
 import { ContinueLearningCard } from "@/components/home/ContinueLearningCard";
-import { AsmaulHusnaCard } from "@/components/home/AsmaulHusnaCard";
-import { BulanHijriahCard } from "@/components/home/BulanHijriahCard";
 import { InstallPrompt } from "@/components/home/InstallPrompt";
 import { MockModeBanner } from "@/components/home/MockModeBanner";
 import { StarterPathCard } from "@/components/home/StarterPathCard";
 import { HomeSkeleton } from "@/components/home/HomeSkeleton";
+
+// Below-the-fold cards — code-split to keep initial bundle lean.
+const ReflectionCard = dynamic(
+  () => import("@/components/home/ReflectionCard").then((m) => m.ReflectionCard),
+  { ssr: false },
+);
+const AsmaulHusnaCard = dynamic(
+  () => import("@/components/home/AsmaulHusnaCard").then((m) => m.AsmaulHusnaCard),
+  { ssr: false },
+);
+const DoaTodayCard = dynamic(
+  () => import("@/components/home/DoaTodayCard").then((m) => m.DoaTodayCard),
+  { ssr: false },
+);
+const BulanHijriahCard = dynamic(
+  () => import("@/components/home/BulanHijriahCard").then((m) => m.BulanHijriahCard),
+  { ssr: false },
+);
+const HabitTracker = dynamic(
+  () => import("@/components/home/HabitTracker").then((m) => m.HabitTracker),
+  { ssr: false },
+);
+const JournalEntryCard = dynamic(
+  () => import("@/components/home/JournalEntryCard").then((m) => m.JournalEntryCard),
+  { ssr: false },
+);
 import { reflectionForToday } from "@/data/seed-reflections";
 import { useAuth } from "@/providers/AuthProvider";
 import {

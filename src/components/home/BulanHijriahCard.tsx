@@ -5,21 +5,41 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { getHijriDate, type HijriDate } from "@/lib/hijri";
 import { getMonthInfo } from "@/data/seed-bulan-hijriah";
 
 export function BulanHijriahCard() {
   const [hijri, setHijri] = useState<HijriDate | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     let alive = true;
     void getHijriDate().then((h) => {
-      if (alive) setHijri(h);
+      if (alive) {
+        setHijri(h);
+        setLoaded(true);
+      }
     });
     return () => {
       alive = false;
     };
   }, []);
+
+  if (!loaded) {
+    return (
+      <Card tone="white" className="border border-ink/5">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-10 w-10" rounded="card" />
+          <div className="flex-1 space-y-1.5">
+            <Skeleton className="h-2.5 w-24" rounded="pill" />
+            <Skeleton className="h-3.5 w-36" rounded="pill" />
+            <Skeleton className="h-2.5 w-3/4" rounded="pill" />
+          </div>
+        </div>
+      </Card>
+    );
+  }
 
   if (!hijri) return null;
   const info = getMonthInfo(hijri.month);

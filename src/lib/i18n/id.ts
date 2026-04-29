@@ -82,6 +82,13 @@ export const id = {
     summary: (touched: number) =>
       `Kamu menyentuh kebiasaan ini di ${touched} hari minggu ini 🌱`,
     addCustom: "Tambah kebiasaan",
+    addPlaceholder: "Misalnya: Sedekah seribu rupiah",
+    addAction: "Tambah",
+    cancelAction: "Batal",
+    edit: "Atur",
+    done: "Selesai",
+    customLimitHint: "Maksimal 5 kebiasaan tambahan",
+    removeLabel: "Hapus kebiasaan",
     presets: [
       "Sholat subuh tepat waktu",
       "Dzikir pagi-petang",
