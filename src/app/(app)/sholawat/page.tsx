@@ -33,9 +33,7 @@ export default function SholawatPage() {
     flushTimer.current = setTimeout(() => {
       const delta = pendingRef.current;
       pendingRef.current = 0;
-      // Reuse afterPrayer slot for sholawat aggregate (or keep separate field).
-      // Here we use category 'afterPrayer' as a generic spiritual count.
-      if (delta > 0) void bumpDzikirCount(user.uid, "afterPrayer", delta);
+      if (delta > 0) void bumpDzikirCount(user.uid, "sholawat", delta);
     }, 800);
   }
 

@@ -10,23 +10,36 @@ import {
   NotebookPen,
   Moon,
   Settings,
+  Sparkles,
   Compass,
   LogOut,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
-import { Blob } from "@/components/illustrations/Blob";
 import { useAuth } from "@/providers/AuthProvider";
-import { featuredSituationIds, situations } from "@/data/seed-butuhkan";
 import { id as t } from "@/lib/i18n/id";
 
 const items = [
+  {
+    href: "/butuhkan",
+    title: "Bantuan untuk Hatimu",
+    desc: "Topik & doa sesuai apa yang kamu rasakan",
+    Icon: HeartHandshake,
+    tone: "secondary" as const,
+  },
   {
     href: "/muhasabah",
     title: "Muhasabah Malam",
     desc: "4 pertanyaan singkat sebelum tidur",
     Icon: Moon,
     tone: "primary" as const,
+  },
+  {
+    href: "/kembali",
+    title: "Aku ingin kembali",
+    desc: "Mulai lagi pelan-pelan dari istighfar",
+    Icon: Sparkles,
+    tone: "accent" as const,
   },
   {
     href: "/journal",
@@ -74,10 +87,6 @@ export default function HatiPage() {
     router.replace("/sign-in");
   }
 
-  const featured = featuredSituationIds
-    .map((id) => situations.find((s) => s.id === id))
-    .filter((s): s is NonNullable<typeof s> => Boolean(s));
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -90,67 +99,23 @@ export default function HatiPage() {
         <p className="mt-1 text-sm text-ink-soft">{t.hati.subtitle}</p>
       </header>
 
-      {/* Hero — Bantuan untuk Hatimu */}
-      <Card tone="secondary" className="overflow-hidden">
-        <Blob
-          color="#FFE9A8"
-          size={160}
-          className="absolute -right-10 -top-10 opacity-50"
-        />
-        <div className="relative">
-          <div className="flex items-center gap-2">
-            <HeartHandshake size={18} className="text-primary" />
-            <h2 className="text-base font-bold text-ink">
-              {t.butuhkan.homePrompt}
-            </h2>
-          </div>
-          <p className="mt-1 text-xs text-ink-soft">
-            Pilih satu yang paling dekat dengan kondisimu sekarang.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {featured.map((s) => (
-              <motion.div key={s.id} whileTap={{ scale: 0.96 }}>
-                <Link
-                  href={`/butuhkan/${s.id}`}
-                  className="inline-flex items-center gap-1.5 rounded-pill bg-white px-3 py-1.5 text-xs font-medium text-ink shadow-soft hover:bg-primary-tint"
-                >
-                  <span className="text-base leading-none">{s.emoji}</span>
-                  {s.short}
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-          <Link
-            href="/butuhkan"
-            className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
-          >
-            {t.butuhkan.seeAll}
-            <ChevronRight size={14} />
-          </Link>
-        </div>
-      </Card>
-
-      {/* Other tools */}
       <section className="space-y-3">
-        <h2 className="px-1 text-sm font-bold text-ink">Lainnya</h2>
-        <div className="space-y-3">
-          {items.map(({ href, title, desc, Icon, tone }) => (
-            <Link key={href} href={href} className="block">
-              <Card tone={tone}>
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-card bg-white text-ink">
-                    <Icon size={22} />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-base font-bold text-ink">{title}</h3>
-                    <p className="mt-0.5 text-xs text-ink-soft">{desc}</p>
-                  </div>
-                  <ChevronRight size={20} className="text-ink-muted" />
+        {items.map(({ href, title, desc, Icon, tone }) => (
+          <Link key={href} href={href} className="block">
+            <Card tone={tone}>
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-card bg-white text-ink">
+                  <Icon size={22} />
                 </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
+                <div className="flex-1">
+                  <h3 className="text-base font-bold text-ink">{title}</h3>
+                  <p className="mt-0.5 text-xs text-ink-soft">{desc}</p>
+                </div>
+                <ChevronRight size={20} className="text-ink-muted" />
+              </div>
+            </Card>
+          </Link>
+        ))}
       </section>
 
       <button

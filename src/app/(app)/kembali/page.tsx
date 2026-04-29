@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Blob } from "@/components/illustrations/Blob";
@@ -69,8 +69,16 @@ export default function KembaliPage() {
         delay={0.6}
       />
 
+      <Link
+        href="/home"
+        aria-label="Tutup"
+        className="absolute left-5 top-5 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/70 text-ink shadow-soft backdrop-blur"
+      >
+        <X size={18} />
+      </Link>
+
       <div className="relative z-10 mx-auto max-w-md px-5 py-8 pb-12">
-        <header className="mb-6 text-center">
+        <header className="mb-6 mt-6 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}

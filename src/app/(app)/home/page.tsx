@@ -22,6 +22,7 @@ import { ContinueLearningCard } from "@/components/home/ContinueLearningCard";
 import { AsmaulHusnaCard } from "@/components/home/AsmaulHusnaCard";
 import { BulanHijriahCard } from "@/components/home/BulanHijriahCard";
 import { InstallPrompt } from "@/components/home/InstallPrompt";
+import { MockModeBanner } from "@/components/home/MockModeBanner";
 import { HomeSkeleton } from "@/components/home/HomeSkeleton";
 import { reflectionForToday } from "@/data/seed-reflections";
 import { useAuth } from "@/providers/AuthProvider";
@@ -34,7 +35,7 @@ import type { PrayerProgress, QuranPosition } from "@/types";
 
 const stagger = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.06 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
 };
 
 const item = {
@@ -81,14 +82,21 @@ export default function HomePage() {
     }
     let alive = true;
     (async () => {
-      const [p, q] = await Promise.all([
-        loadPrayers(user.uid),
-        loadQuranPosition(user.uid),
-      ]);
-      if (!alive) return;
-      if (p) setProgress(p);
-      if (q) setPosition(q);
-      setHydrated(true);
+      try {
+        const [p, q] = await Promise.all([
+          loadPrayers(user.uid),
+          loadQuranPosition(user.uid),
+        ]);
+        if (!alive) return;
+        if (p) setProgress(p);
+        if (q) setPosition(q);
+      } catch (err) {
+        // Silently fall back to local state — user keeps offline progress
+        // eslint-disable-next-line no-console
+        console.warn("Home data load failed, using local state:", err);
+      } finally {
+        if (alive) setHydrated(true);
+      }
     })();
     return () => {
       alive = false;
@@ -112,102 +120,81 @@ export default function HomePage() {
       animate="visible"
       className="space-y-4"
     >
-      {/* PWA install — appears once when browser is ready */}
+      {/* ── ANNOUNCEMENT LAYER (only when relevant) ───────── */}
       <motion.div variants={item}>
         <InstallPrompt />
       </motion.div>
-
-      {/* Comeback banner — only shows if absent >3 days */}
       <motion.div variants={item}>
         <KembaliBanner />
       </motion.div>
-
-      {/* Special day awareness — Jumat / Senin-Kamis / Ramadhan / Ayyamul Bidh */}
       <motion.div variants={item}>
         <SpecialDayBanner />
       </motion.div>
+      <motion.div variants={item}>
+        <MockModeBanner />
+      </motion.div>
 
-      {/* 1. Greeting — anchor */}
+      {/* ── 1. ANCHOR — who you are, what's available now ───── */}
       <motion.div variants={item}>
         <GreetingHeader name={name} />
       </motion.div>
-
-      {/* 2. Quick actions — 1-tap to Sholawat / Taubat / Doa / Jadwal */}
       <motion.div variants={item}>
         <QuickActionsRow />
       </motion.div>
 
-      {/* 3. Time-of-day spotlight — contextual nudge by hour */}
-      <motion.div variants={item}>
-        <TimeSpotlightCard />
-      </motion.div>
-
-      {/* 4. Niat — commit small now, anti-taswif */}
-      <motion.div variants={item}>
-        <NiatBesokCard />
-      </motion.div>
-
-      {/* 5. Next prayer — daily anchor */}
+      {/* ── 2. PRIMARY DAILY ACTION — the prayers ─────────── */}
       <motion.div variants={item}>
         <NextPrayerCard />
       </motion.div>
-
-      {/* 5b. Bulan Hijriah ini — keutamaan + amalan */}
-      <motion.div variants={item}>
-        <BulanHijriahCard />
-      </motion.div>
-
-      {/* 6. Continue learning — last belajar topic */}
-      <motion.div variants={item}>
-        <ContinueLearningCard />
-      </motion.div>
-
-      {/* 5. Micro-habits — 5 tiny ibadah suggestions */}
-      <motion.div variants={item}>
-        <MicroHabitsCard />
-      </motion.div>
-
-      {/* 6. What you feel — fast access to mood-based help */}
-      <motion.div variants={item}>
-        <PerasaanCard />
-      </motion.div>
-
-      {/* 7. Today's reflection — Allah's word */}
-      <motion.div variants={item}>
-        <ReflectionCard reflection={reflection} />
-      </motion.div>
-
-      {/* 8. Asmaul Husna of the day — knowing Allah */}
-      <motion.div variants={item}>
-        <AsmaulHusnaCard />
-      </motion.div>
-
-      {/* 9. Today's doa — small daily seed */}
-      <motion.div variants={item}>
-        <DoaTodayCard />
-      </motion.div>
-
-      {/* 10. Sholat — combined ring + checklist */}
       <motion.div variants={item}>
         <PrayerCard value={progress} onChange={onPrayerChange} />
       </motion.div>
 
-      {/* 10. Streak-free habit tracker */}
+      {/* ── 3. TIME-AWARE NUDGE + COMMITMENT ──────────────── */}
       <motion.div variants={item}>
-        <HabitTracker />
+        <TimeSpotlightCard />
+      </motion.div>
+      <motion.div variants={item}>
+        <NiatBesokCard />
+      </motion.div>
+      <motion.div variants={item}>
+        <MicroHabitsCard />
       </motion.div>
 
-      {/* 11. Continue Quran */}
+      {/* ── 4. CONTINUE WHERE YOU WERE ────────────────────── */}
       <motion.div variants={item}>
         <QuranContinueCard position={position} />
       </motion.div>
-
-      {/* 12. Today's dzikir count */}
+      <motion.div variants={item}>
+        <ContinueLearningCard />
+      </motion.div>
       <motion.div variants={item}>
         <DzikirTotalCard />
       </motion.div>
 
-      {/* 13. Journal — quiet last */}
+      {/* ── 5. DAILY SPIRITUAL CONTENT ────────────────────── */}
+      <motion.div variants={item}>
+        <ReflectionCard reflection={reflection} />
+      </motion.div>
+      <motion.div variants={item}>
+        <AsmaulHusnaCard />
+      </motion.div>
+      <motion.div variants={item}>
+        <DoaTodayCard />
+      </motion.div>
+      <motion.div variants={item}>
+        <BulanHijriahCard />
+      </motion.div>
+
+      {/* ── 6. WHEN YOU NEED SUPPORT ──────────────────────── */}
+      <motion.div variants={item}>
+        <PerasaanCard />
+      </motion.div>
+
+      {/* ── 7. PROGRESS REVIEW (collapsible at the bottom) ── */}
+      <motion.div variants={item}>
+        <HabitTracker />
+      </motion.div>
       <motion.div variants={item}>
         <JournalEntryCard />
       </motion.div>

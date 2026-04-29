@@ -102,7 +102,12 @@ export async function saveJournal(uid: string, entry: JournalEntry) {
 
 // --- Dzikir logs ---
 
-type DzikirLog = Partial<Record<DzikirCategory | "istighfar", number>>;
+export type DzikirAggregateField =
+  | DzikirCategory
+  | "istighfar"
+  | "sholawat";
+
+type DzikirLog = Partial<Record<DzikirAggregateField, number>>;
 
 export async function loadDzikirLog(
   uid: string,
@@ -156,7 +161,7 @@ export async function deleteBookmark(uid: string, id: string) {
 
 export async function bumpDzikirCount(
   uid: string,
-  field: DzikirCategory | "istighfar",
+  field: DzikirAggregateField,
   by = 1,
   date = todayKey(),
 ) {
