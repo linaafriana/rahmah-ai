@@ -5,48 +5,18 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { GreetingHeader } from "@/components/home/GreetingHeader";
 import { PrayerCard } from "@/components/home/PrayerCard";
-import { QuranContinueCard } from "@/components/home/QuranContinueCard";
-import { DzikirTotalCard } from "@/components/home/DzikirTotalCard";
-import { PerasaanCard } from "@/components/home/PerasaanCard";
-import { NextPrayerCard } from "@/components/home/NextPrayerCard";
 import { QuickActionsRow } from "@/components/home/QuickActionsRow";
+import { TimeSpotlightCard } from "@/components/home/TimeSpotlightCard";
 import { NiatBesokCard } from "@/components/home/NiatBesokCard";
 import { MicroHabitsCard } from "@/components/home/MicroHabitsCard";
+import { LanjutkanCard } from "@/components/home/LanjutkanCard";
+import { PerasaanCard } from "@/components/home/PerasaanCard";
 import { KembaliBanner } from "@/components/home/KembaliBanner";
-import { TimeSpotlightCard } from "@/components/home/TimeSpotlightCard";
 import { SpecialDayBanner } from "@/components/home/SpecialDayBanner";
-import { ContinueLearningCard } from "@/components/home/ContinueLearningCard";
 import { InstallPrompt } from "@/components/home/InstallPrompt";
 import { MockModeBanner } from "@/components/home/MockModeBanner";
 import { StarterPathCard } from "@/components/home/StarterPathCard";
 import { HomeSkeleton } from "@/components/home/HomeSkeleton";
-
-// Below-the-fold cards — code-split to keep initial bundle lean.
-const ReflectionCard = dynamic(
-  () => import("@/components/home/ReflectionCard").then((m) => m.ReflectionCard),
-  { ssr: false },
-);
-const AsmaulHusnaCard = dynamic(
-  () => import("@/components/home/AsmaulHusnaCard").then((m) => m.AsmaulHusnaCard),
-  { ssr: false },
-);
-const DoaTodayCard = dynamic(
-  () => import("@/components/home/DoaTodayCard").then((m) => m.DoaTodayCard),
-  { ssr: false },
-);
-const BulanHijriahCard = dynamic(
-  () => import("@/components/home/BulanHijriahCard").then((m) => m.BulanHijriahCard),
-  { ssr: false },
-);
-const HabitTracker = dynamic(
-  () => import("@/components/home/HabitTracker").then((m) => m.HabitTracker),
-  { ssr: false },
-);
-const JournalEntryCard = dynamic(
-  () => import("@/components/home/JournalEntryCard").then((m) => m.JournalEntryCard),
-  { ssr: false },
-);
-import { reflectionForToday } from "@/data/seed-reflections";
 import { useAuth } from "@/providers/AuthProvider";
 import {
   loadPrayers,
@@ -54,6 +24,33 @@ import {
   savePrayers,
 } from "@/lib/firebase/firestore";
 import type { PrayerProgress, QuranPosition } from "@/types";
+
+// Below-the-fold cards — code-split to keep initial bundle lean.
+const DailyContentCard = dynamic(
+  () =>
+    import("@/components/home/DailyContentCard").then(
+      (m) => m.DailyContentCard,
+    ),
+  { ssr: false },
+);
+const BulanHijriahCard = dynamic(
+  () =>
+    import("@/components/home/BulanHijriahCard").then(
+      (m) => m.BulanHijriahCard,
+    ),
+  { ssr: false },
+);
+const DzikirTotalCard = dynamic(
+  () =>
+    import("@/components/home/DzikirTotalCard").then(
+      (m) => m.DzikirTotalCard,
+    ),
+  { ssr: false },
+);
+const HabitTracker = dynamic(
+  () => import("@/components/home/HabitTracker").then((m) => m.HabitTracker),
+  { ssr: false },
+);
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -83,7 +80,7 @@ const fallbackPosition: QuranPosition = {
 export default function HomePage() {
   const { user } = useAuth();
   const [progress, setProgress] = useState<PrayerProgress>(emptyProgress);
-  const [position, setPosition] = useState<QuranPosition>(fallbackPosition);
+  const [, setPosition] = useState<QuranPosition>(fallbackPosition);
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
@@ -113,7 +110,6 @@ export default function HomePage() {
         if (p) setProgress(p);
         if (q) setPosition(q);
       } catch (err) {
-        // Silently fall back to local state — user keeps offline progress
         // eslint-disable-next-line no-console
         console.warn("Home data load failed, using local state:", err);
       } finally {
@@ -125,7 +121,6 @@ export default function HomePage() {
     };
   }, [user]);
 
-  const reflection = reflectionForToday();
   const name = displayName ?? user?.name ?? "Sahabat";
 
   function onPrayerChange(next: PrayerProgress) {
@@ -142,7 +137,7 @@ export default function HomePage() {
       animate="visible"
       className="space-y-4"
     >
-      {/* ── ANNOUNCEMENT LAYER (only when relevant) ───────── */}
+      {/* ── BANNERS — only when relevant, dismissible ───────── */}
       <motion.div variants={item}>
         <InstallPrompt />
       </motion.div>
@@ -155,8 +150,11 @@ export default function HomePage() {
       <motion.div variants={item}>
         <MockModeBanner />
       </motion.div>
+      <motion.div variants={item}>
+        <StarterPathCard />
+      </motion.div>
 
-      {/* ── 1. ANCHOR — who you are, what's available now ───── */}
+      {/* ── ANCHOR ───────────────────────────────────────────── */}
       <motion.div variants={item}>
         <GreetingHeader name={name} />
       </motion.div>
@@ -164,20 +162,12 @@ export default function HomePage() {
         <QuickActionsRow />
       </motion.div>
 
-      {/* Starter path — 3 topics from onboarding focus, dismissible */}
-      <motion.div variants={item}>
-        <StarterPathCard />
-      </motion.div>
-
-      {/* ── 2. PRIMARY DAILY ACTION — the prayers ─────────── */}
-      <motion.div variants={item}>
-        <NextPrayerCard />
-      </motion.div>
+      {/* ── PRIMARY DAILY ACTION — combined prayer card ────── */}
       <motion.div variants={item}>
         <PrayerCard value={progress} onChange={onPrayerChange} />
       </motion.div>
 
-      {/* ── 3. TIME-AWARE NUDGE + COMMITMENT ──────────────── */}
+      {/* ── CONTEXT — time-of-day + niat + micro-habits ────── */}
       <motion.div variants={item}>
         <TimeSpotlightCard />
       </motion.div>
@@ -188,42 +178,30 @@ export default function HomePage() {
         <MicroHabitsCard />
       </motion.div>
 
-      {/* ── 4. CONTINUE WHERE YOU WERE ────────────────────── */}
+      {/* ── CONTINUE — Quran + Belajar in one card ─────────── */}
       <motion.div variants={item}>
-        <QuranContinueCard position={position} />
-      </motion.div>
-      <motion.div variants={item}>
-        <ContinueLearningCard />
-      </motion.div>
-      <motion.div variants={item}>
-        <DzikirTotalCard />
+        <LanjutkanCard />
       </motion.div>
 
-      {/* ── 5. DAILY SPIRITUAL CONTENT ────────────────────── */}
+      {/* ── DAILY CONTENT — tabbed: Ayah · Nama Allah · Doa ── */}
       <motion.div variants={item}>
-        <ReflectionCard reflection={reflection} />
-      </motion.div>
-      <motion.div variants={item}>
-        <AsmaulHusnaCard />
-      </motion.div>
-      <motion.div variants={item}>
-        <DoaTodayCard />
-      </motion.div>
-      <motion.div variants={item}>
-        <BulanHijriahCard />
+        <DailyContentCard />
       </motion.div>
 
-      {/* ── 6. WHEN YOU NEED SUPPORT ──────────────────────── */}
+      {/* ── SUPPORT — when you need help ───────────────────── */}
       <motion.div variants={item}>
         <PerasaanCard />
       </motion.div>
 
-      {/* ── 7. PROGRESS REVIEW (collapsible at the bottom) ── */}
+      {/* ── BELOW THE FOLD — informational + tracking ──────── */}
       <motion.div variants={item}>
-        <HabitTracker />
+        <BulanHijriahCard />
       </motion.div>
       <motion.div variants={item}>
-        <JournalEntryCard />
+        <DzikirTotalCard />
+      </motion.div>
+      <motion.div variants={item}>
+        <HabitTracker />
       </motion.div>
     </motion.div>
   );
