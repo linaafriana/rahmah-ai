@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, Check, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Blob } from "@/components/illustrations/Blob";
@@ -90,10 +90,17 @@ export default function OnboardingPage() {
   function finish() {
     if (typeof window !== "undefined") {
       window.localStorage.setItem("sakinah:onboarded", "true");
-      if (name.trim()) window.localStorage.setItem("sakinah:displayName", name.trim());
-      if (focus) window.localStorage.setItem("sakinah:focus", focus);
+      if (name.trim())
+        window.localStorage.setItem("sakinah:displayName", name.trim());
+      // Note: previously also wrote `sakinah:focus` here, but no other
+      // surface ever read it back. Removed to keep localStorage clean
+      // (and easier to clear on sign-out per the audit-fixes pass).
     }
     router.push("/sign-in");
+  }
+
+  function back() {
+    setStep((s) => (s > 1 ? ((s - 1) as 1 | 2 | 3 | 4) : s));
   }
 
   return (
@@ -116,16 +123,32 @@ export default function OnboardingPage() {
         delay={0.7}
       />
 
-      {/* Progress */}
-      <div className="relative z-10 mb-6 flex gap-1.5 mt-auto">
-        {[1, 2, 3, 4].map((n) => (
-          <div
-            key={n}
-            className={`h-1.5 flex-1 rounded-pill transition-colors ${
-              n <= step ? "bg-primary" : "bg-ink/10"
-            }`}
-          />
-        ))}
+      {/* Back + progress */}
+      <div className="relative z-10 mb-6 mt-auto flex items-center gap-3">
+        {step > 1 ? (
+          <button
+            type="button"
+            onClick={back}
+            aria-label="Kembali"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/70 text-ink-soft shadow-soft hover:text-ink"
+          >
+            <ArrowLeft size={16} />
+          </button>
+        ) : (
+          // Reserved 32px slot keeps progress bar position stable across
+          // steps so the eye doesn't track left/right when navigating.
+          <span className="h-8 w-8 shrink-0" />
+        )}
+        <div className="flex flex-1 gap-1.5">
+          {[1, 2, 3, 4].map((n) => (
+            <div
+              key={n}
+              className={`h-1.5 flex-1 rounded-pill transition-colors ${
+                n <= step ? "bg-primary" : "bg-ink/10"
+              }`}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="relative z-10 flex-1">
@@ -136,7 +159,7 @@ export default function OnboardingPage() {
               initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -16 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.18 }}
               className="space-y-6"
             >
               <div className="flex items-center justify-center">
@@ -170,7 +193,7 @@ export default function OnboardingPage() {
               initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -16 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.18 }}
               className="space-y-5"
             >
               <div>
@@ -213,7 +236,7 @@ export default function OnboardingPage() {
               initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -16 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.18 }}
               className="space-y-5"
             >
               <div>
@@ -267,7 +290,7 @@ export default function OnboardingPage() {
               initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -16 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.18 }}
               className="space-y-5"
             >
               <div>
