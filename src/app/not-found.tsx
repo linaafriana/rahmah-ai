@@ -12,7 +12,7 @@ export default function NotFound() {
         — mari kembali.
       </p>
       <Link
-        href="/home"
+        href="/"
         className="mt-8 inline-flex rounded-pill bg-primary px-6 py-3 text-sm font-semibold text-white shadow-soft hover:bg-primary/90"
       >
         Kembali ke Beranda

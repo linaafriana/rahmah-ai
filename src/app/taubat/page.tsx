@@ -56,26 +56,24 @@ export default function TaubatPage() {
       </Link>
 
       <div className="relative z-10 mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center px-6 text-center">
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {!started ? (
             <motion.div
               key="intro"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.4 }}
             >
-              <motion.h1
-                animate={{ y: [0, -4, 0] }}
-                transition={{
-                  duration: 5,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                }}
-                className="text-balance text-3xl font-bold leading-snug text-ink"
-              >
+              {/* Plain h1 — the previous perpetual `motion.h1 animate={{ y:
+                  [0,-4,0], repeat: Infinity }}` left the layer in an
+                  un-painted state in some browsers; the heading rect was
+                  correct and computed styles said visible, but no glyphs
+                  rendered. Wobble removed; the entry transition above is
+                  the only motion this heading needs. */}
+              <h1 className="text-balance text-3xl font-bold leading-snug text-ink">
                 {t.taubat.title}
-              </motion.h1>
+              </h1>
               <p className="mt-4 text-sm text-ink-soft">
                 {t.taubat.subtitle}
               </p>
