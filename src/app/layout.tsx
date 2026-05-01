@@ -6,7 +6,10 @@ import { AuthProvider } from "@/providers/AuthProvider";
 import "./globals.css";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://rahmah.example.com";
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000");
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -64,7 +67,6 @@ export const viewport: Viewport = {
   themeColor: "#FFF6F0",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 };
 
 export default function RootLayout({

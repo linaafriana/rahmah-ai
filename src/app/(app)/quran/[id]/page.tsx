@@ -55,6 +55,11 @@ export default async function SurahPage({
   if (!chapter || !versesPage) {
     notFound();
   }
+  if (versesPage.verses.length === 0) {
+    // page out of range — e.g. ?page=99999 returns an empty payload
+    // rather than a 404 from the upstream API.
+    notFound();
+  }
 
   const startVerse = (page - 1) * PER_PAGE + 1;
   const endVerse = Math.min(versesPage.total, page * PER_PAGE);

@@ -235,6 +235,12 @@ export async function getQibla(
 const METHOD_KEY = "sakinah:prayerMethod";
 const TUNE_KEY = "sakinah:prayerTune";
 
+// Fired on the same tab when prayer settings change. The browser's
+// `storage` event only fires across tabs, so consumers in the same tab
+// (e.g. PrayerCard while user updates /pengaturan and navigates back)
+// need this signal to refetch.
+export const PRAYER_SETTINGS_EVENT = "sakinah:prayer-settings-changed";
+
 export function readUserMethod(): number {
   if (typeof window === "undefined") return DEFAULT_METHOD;
   const v = window.localStorage.getItem(METHOD_KEY);
@@ -246,6 +252,7 @@ export function readUserMethod(): number {
 export function writeUserMethod(method: number): void {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(METHOD_KEY, String(method));
+  window.dispatchEvent(new Event(PRAYER_SETTINGS_EVENT));
 }
 
 export function readUserTune(): TuneOffsets {
@@ -263,6 +270,7 @@ export function readUserTune(): TuneOffsets {
 export function writeUserTune(tune: TuneOffsets): void {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(TUNE_KEY, JSON.stringify(tune));
+  window.dispatchEvent(new Event(PRAYER_SETTINGS_EVENT));
 }
 
 // ─── Prayer-name labels (Indonesian) ──────────────────────

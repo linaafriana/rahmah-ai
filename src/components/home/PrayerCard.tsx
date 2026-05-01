@@ -14,6 +14,7 @@ import {
   formatCountdown,
   getTimings,
   nextPrayer,
+  PRAYER_SETTINGS_EVENT,
   prayerLabels,
   readUserMethod,
   readUserTune,
@@ -37,17 +38,26 @@ export function PrayerCard({ value, onChange }: Props) {
   useEffect(() => {
     if (!coords) return;
     let alive = true;
-    void getTimings(coords.latitude, coords.longitude, {
-      method: readUserMethod(),
-      tune: readUserTune(),
-    }).then((tng) => {
-      if (alive && tng) setTimings(tng);
-    });
+
+    function fetchTimings() {
+      if (!coords) return;
+      void getTimings(coords.latitude, coords.longitude, {
+        method: readUserMethod(),
+        tune: readUserTune(),
+      }).then((tng) => {
+        if (alive && tng) setTimings(tng);
+      });
+    }
+
+    fetchTimings();
     void reverseGeocode(coords.latitude, coords.longitude).then((g) => {
       if (alive && g) setGeo(g);
     });
+
+    window.addEventListener(PRAYER_SETTINGS_EVENT, fetchTimings);
     return () => {
       alive = false;
+      window.removeEventListener(PRAYER_SETTINGS_EVENT, fetchTimings);
     };
   }, [coords]);
 

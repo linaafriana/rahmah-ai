@@ -8,6 +8,10 @@ import { Card } from "@/components/ui/Card";
 import { localDateKey } from "@/lib/date";
 import { id as t } from "@/lib/i18n/id";
 
+// Habit history is intentionally device-local — never synced to Firestore.
+// The README's "no streak guilt" principle means losing 7-day history on a
+// device switch is acceptable. Promote to a Firestore collection if/when
+// habits become a cross-device feature.
 const STATE_KEY = "sakinah:habits";
 const CUSTOM_KEY = "sakinah:habitsCustom";
 const MAX_CUSTOM = 5;
