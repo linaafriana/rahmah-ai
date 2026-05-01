@@ -3,6 +3,7 @@ import {
   saveBookmark,
   saveQuranPosition,
   savePrayers,
+  loadBookmarks,
 } from "@/lib/firebase/firestore";
 import type {
   JournalEntry,
@@ -96,5 +97,43 @@ export async function migrateLocalDataToFirestore(uid: string): Promise<void> {
   } catch (err) {
     // eslint-disable-next-line no-console
     console.warn("Local→Firestore migration failed (non-fatal):", err);
+  }
+}
+
+/**
+ * Pulls remote bookmarks into localStorage so BookmarkButton (which
+ * reads localStorage only) shows the correct state on a device that
+ * just signed in. Bookmarks page does its own merge; this is for the
+ * per-verse buttons across the Quran reader.
+ *
+ * Merge strategy: union by id, remote wins on conflict (it's the
+ * source of truth post-migration), sorted by createdAt desc.
+ */
+export async function syncBookmarksToLocal(uid: string): Promise<void> {
+  if (typeof window === "undefined") return;
+  try {
+    const remote = await loadBookmarks(uid);
+    if (!remote.length) return;
+
+    let local: VerseBookmark[] = [];
+    const localRaw = window.localStorage.getItem(BOOKMARKS_KEY);
+    if (localRaw) {
+      try {
+        const arr = JSON.parse(localRaw);
+        if (Array.isArray(arr)) local = arr as VerseBookmark[];
+      } catch {
+        // ignore malformed
+      }
+    }
+
+    const map = new Map<string, VerseBookmark>();
+    for (const b of local) map.set(b.id, b);
+    for (const b of remote) map.set(b.id, b);
+    const merged = Array.from(map.values()).sort(
+      (a, b) => b.createdAt - a.createdAt,
+    );
+    window.localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(merged));
+  } catch {
+    // best-effort
   }
 }
