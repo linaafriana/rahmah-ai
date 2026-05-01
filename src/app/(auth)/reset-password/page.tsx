@@ -74,13 +74,22 @@ export default function ResetPasswordPage() {
           {t.signIn.resetSubtitle}
         </p>
 
-        {!configured && (
-          <p className="mb-4 rounded-card bg-accent-tint px-3 py-2 text-xs text-ink-soft">
-            Mode demo: tidak ada akun nyata untuk direset.
-          </p>
-        )}
-
-        {sent ? (
+        {!configured ? (
+          <Card tone="white">
+            <p className="text-sm leading-relaxed text-ink">
+              Reset kata sandi tidak tersedia di mode demo — belum ada akun
+              nyata yang tersimpan. Hubungkan Firebase di{" "}
+              <code className="rounded bg-background px-1 text-[11px]">.env.local</code>{" "}
+              untuk mengaktifkan fitur ini.
+            </p>
+            <Link
+              href="/sign-in"
+              className="mt-4 inline-flex w-full items-center justify-center rounded-pill bg-primary px-5 py-3 text-sm font-semibold text-white shadow-soft"
+            >
+              {t.signIn.resetBackToSignIn}
+            </Link>
+          </Card>
+        ) : sent ? (
           <Card tone="primary" className="text-center">
             <motion.div
               initial={{ scale: 0 }}

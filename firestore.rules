@@ -27,8 +27,14 @@ service cloud.firestore {
     }
 
     // journals/{uid}/entries/{date}
-    match /journals/{uid}/{document=**} {
-      allow read, write: if isOwner(uid);
+    // Hard cap on text to defend against a runaway autosave bug or a
+    // malicious client racking up storage on its own quota.
+    match /journals/{uid}/entries/{entryId} {
+      allow read: if isOwner(uid);
+      allow create, update: if isOwner(uid)
+        && request.resource.data.text is string
+        && request.resource.data.text.size() < 50000;
+      allow delete: if isOwner(uid);
     }
 
     // dzikirLogs/{uid}/daily/{date}

@@ -19,7 +19,10 @@ import {
   type User as FbUser,
 } from "firebase/auth";
 import { firebaseAuth, isFirebaseConfigured } from "@/lib/firebase/client";
-import { migrateLocalDataToFirestore } from "@/lib/firebase/migration";
+import {
+  migrateLocalDataToFirestore,
+  syncBookmarksToLocal,
+} from "@/lib/firebase/migration";
 
 export type SessionUser = {
   uid: string;
@@ -78,10 +81,29 @@ function writeMock(name: string, email: string | null) {
   );
 }
 
-function clearMock() {
-  if (typeof window !== "undefined") {
-    window.localStorage.removeItem(MOCK_KEY);
+// Clears all `sakinah:*` localStorage keys except device-level prefs the
+// user explicitly picked (calculation method, tuning, favorite reciter,
+// onboarding flag, last-known coords). Used on sign-out so a shared
+// device doesn't leak user A's data into user B's next session —
+// including a subsequent migration sweep — without forcing user A to
+// re-tune their prayer settings on every sign-in.
+function clearLocalUserData() {
+  if (typeof window === "undefined") return;
+  const keep = new Set([
+    "sakinah:onboarded",
+    "sakinah:prayerMethod",
+    "sakinah:prayerTune",
+    "sakinah:reciterPref",
+    "sakinah:coords",
+  ]);
+  const toRemove: string[] = [];
+  for (let i = 0; i < window.localStorage.length; i++) {
+    const key = window.localStorage.key(i);
+    if (key && key.startsWith("sakinah:") && !keep.has(key)) {
+      toRemove.push(key);
+    }
   }
+  toRemove.forEach((k) => window.localStorage.removeItem(k));
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -97,9 +119,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsub = onAuthStateChanged(firebaseAuth, (u) => {
       setUser(u ? toSessionUser(u) : null);
       setLoading(false);
-      // Best-effort: migrate local data to Firestore on first sign-in.
-      // Idempotent — guarded by sakinah:migratedFor:{uid} flag.
-      if (u) void migrateLocalDataToFirestore(u.uid);
+      if (u) {
+        // First sign-in: migrate local data to Firestore (idempotent,
+        // gated by sakinah:migratedFor:{uid}). Every sign-in: pull
+        // bookmarks back to localStorage so BookmarkButton's local-only
+        // check shows the right state on devices that don't have them.
+        void migrateLocalDataToFirestore(u.uid).then(() =>
+          syncBookmarksToLocal(u.uid),
+        );
+      }
     });
     return () => unsub();
   }, []);
@@ -143,10 +171,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
       },
       async signOut() {
+        clearLocalUserData();
         if (firebaseAuth) {
           await fbSignOut(firebaseAuth);
         } else {
-          clearMock();
           setUser(null);
         }
       },
