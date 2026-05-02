@@ -6,11 +6,8 @@ import { motion } from "framer-motion";
 import { GreetingHeader } from "@/components/home/GreetingHeader";
 import { PrayerCard } from "@/components/home/PrayerCard";
 import { QuickActionsRow } from "@/components/home/QuickActionsRow";
-import { TimeSpotlightCard } from "@/components/home/TimeSpotlightCard";
 import { NiatBesokCard } from "@/components/home/NiatBesokCard";
-import { MicroHabitsCard } from "@/components/home/MicroHabitsCard";
 import { LanjutkanCard } from "@/components/home/LanjutkanCard";
-import { PerasaanCard } from "@/components/home/PerasaanCard";
 import { KembaliBanner } from "@/components/home/KembaliBanner";
 import { SpecialDayBanner } from "@/components/home/SpecialDayBanner";
 import { InstallPrompt } from "@/components/home/InstallPrompt";
@@ -26,28 +23,9 @@ import {
 import { localDateKey } from "@/lib/date";
 import type { PrayerProgress, QuranPosition } from "@/types";
 
-// Below-the-fold cards — code-split to keep initial bundle lean.
-const DailyContentCard = dynamic(
-  () =>
-    import("@/components/home/DailyContentCard").then(
-      (m) => m.DailyContentCard,
-    ),
-  { ssr: false },
-);
-const BulanHijriahCard = dynamic(
-  () =>
-    import("@/components/home/BulanHijriahCard").then(
-      (m) => m.BulanHijriahCard,
-    ),
-  { ssr: false },
-);
-const DzikirTotalCard = dynamic(
-  () =>
-    import("@/components/home/DzikirTotalCard").then(
-      (m) => m.DzikirTotalCard,
-    ),
-  { ssr: false },
-);
+// HabitTracker is the second task widget — keep code-split to keep
+// initial bundle lean, but render it directly under PrayerCard so the
+// user lands on their tasks immediately.
 const HabitTracker = dynamic(
   () => import("@/components/home/HabitTracker").then((m) => m.HabitTracker),
   { ssr: false },
@@ -182,71 +160,49 @@ export default function HomePage() {
       animate="visible"
       className="space-y-4"
     >
-      {/* ── BANNERS — only when relevant, dismissible ───────── */}
+      {/* ── Banners — only render when relevant; each is conditional ─ */}
       <motion.div variants={item}>
         <InstallPrompt />
-      </motion.div>
-      <motion.div variants={item}>
-        <KembaliBanner />
-      </motion.div>
-      <motion.div variants={item}>
-        <SpecialDayBanner />
       </motion.div>
       <motion.div variants={item}>
         <MockModeBanner />
       </motion.div>
       <motion.div variants={item}>
+        <SpecialDayBanner />
+      </motion.div>
+      <motion.div variants={item}>
+        <KembaliBanner />
+      </motion.div>
+      <motion.div variants={item}>
         <StarterPathCard />
       </motion.div>
 
-      {/* ── ANCHOR ───────────────────────────────────────────── */}
+      {/* ── Greeting (compact) ──────────────────────────────────── */}
       <motion.div variants={item}>
         <GreetingHeader name={name} />
       </motion.div>
+
+      {/* ── Task hub: sholat + habits stacked at the top ─────────── */}
+      <motion.div variants={item}>
+        <PrayerCard value={progress} onChange={onPrayerChange} />
+      </motion.div>
+      <motion.div variants={item}>
+        <HabitTracker />
+      </motion.div>
+
+      {/* ── Niat hari ini (1 line setter) ────────────────────────── */}
+      <motion.div variants={item}>
+        <NiatBesokCard />
+      </motion.div>
+
+      {/* ── Shortcuts to other ibadah ───────────────────────────── */}
       <motion.div variants={item}>
         <QuickActionsRow />
       </motion.div>
 
-      {/* ── PRIMARY DAILY ACTION — combined prayer card ────── */}
-      <motion.div variants={item}>
-        <PrayerCard value={progress} onChange={onPrayerChange} />
-      </motion.div>
-
-      {/* ── CONTEXT — time-of-day + niat + micro-habits ────── */}
-      <motion.div variants={item}>
-        <TimeSpotlightCard />
-      </motion.div>
-      <motion.div variants={item}>
-        <NiatBesokCard />
-      </motion.div>
-      <motion.div variants={item}>
-        <MicroHabitsCard />
-      </motion.div>
-
-      {/* ── CONTINUE — Quran + Belajar in one card ─────────── */}
+      {/* ── Resume reading ──────────────────────────────────────── */}
       <motion.div variants={item}>
         <LanjutkanCard />
-      </motion.div>
-
-      {/* ── DAILY CONTENT — tabbed: Ayah · Nama Allah · Doa ── */}
-      <motion.div variants={item}>
-        <DailyContentCard />
-      </motion.div>
-
-      {/* ── SUPPORT — when you need help ───────────────────── */}
-      <motion.div variants={item}>
-        <PerasaanCard />
-      </motion.div>
-
-      {/* ── BELOW THE FOLD — informational + tracking ──────── */}
-      <motion.div variants={item}>
-        <BulanHijriahCard />
-      </motion.div>
-      <motion.div variants={item}>
-        <DzikirTotalCard />
-      </motion.div>
-      <motion.div variants={item}>
-        <HabitTracker />
       </motion.div>
     </motion.div>
   );
