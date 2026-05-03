@@ -99,6 +99,11 @@ export default function ButuhkanDetailPage({
           <p className="mt-2 text-sm leading-relaxed text-ink">
             {situation.doa.meaning}
           </p>
+          {situation.doa.source && (
+            <p className="mt-3 text-[11px] text-ink-muted">
+              📖 {situation.doa.source}
+            </p>
+          )}
         </Card>
       </section>
 

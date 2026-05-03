@@ -14,6 +14,8 @@ export interface Situation {
     arabic: string;
     transliteration: string;
     meaning: string;
+    /** Citation hadits untuk verifikasi (e.g. "HR. Bukhari no. 6306"). */
+    source?: string;
   };
   ayah: {
     surahName: string;
@@ -47,6 +49,7 @@ export const situations: Situation[] = [
         "Allāhumma anta rabbī lā ilāha illā anta, khalaqtanī wa anā 'abduk, wa anā 'alā 'ahdika wa wa'dika mastaṭa't, abū'u laka bini'matika 'alayya, wa abū'u bidhanbī faghfir lī",
       meaning:
         "Sayyidul Istighfar — pemuka istighfar. Siapa membacanya dengan yakin di pagi hari, lalu wafat siang itu, masuk surga.",
+      source: "HR. Al-Bukhari no. 6306",
     },
     ayah: {
       surahName: "Az-Zumar",
@@ -79,6 +82,7 @@ export const situations: Situation[] = [
       transliteration: "Yā muqallibal-qulūb, tsabbit qalbī 'alā dīnik",
       meaning:
         "Wahai yang membolak-balikkan hati, teguhkan hatiku dalam agama-Mu. Doa Nabi ﷺ saat hatinya goyah — kita lebih perlu lagi.",
+      source: "HR. At-Tirmidzi no. 3522, Ahmad 6/302, sahih",
     },
     ayah: {
       surahName: "Ar-Ra'd",
@@ -113,6 +117,7 @@ export const situations: Situation[] = [
         "Rabbanā ẓalamnā anfusanā, wa in lam taghfir lanā wa tarḥamnā lanakūnanna minal-khāsirīn",
       meaning:
         "Ya Tuhan kami, kami telah menzalimi diri kami sendiri. Jika Engkau tidak mengampuni dan tidak menyayangi kami, sungguh kami akan termasuk yang merugi. (Doa Adam ﷺ saat tobat)",
+      source: "QS. Al-A'raf: 23",
     },
     ayah: {
       surahName: "At-Tahrim",
@@ -147,6 +152,7 @@ export const situations: Situation[] = [
         "Allāhumma innī as'aluka ḥubbaka, wa ḥubba man yuḥibbuka, wa ḥubba kulli 'amalin yuqarribu ilā ḥubbik",
       meaning:
         "Ya Allah, aku memohon cinta-Mu, cinta orang yang mencintai-Mu, dan cinta setiap amal yang mendekatkan kepada cinta-Mu.",
+      source: "HR. At-Tirmidzi no. 3235, Ahmad 5/243, sahih",
     },
     ayah: {
       surahName: "Ali Imran",
@@ -180,6 +186,7 @@ export const situations: Situation[] = [
         "Ḥasbiyallāhu lā ilāha illā huwa, 'alaihi tawakkaltu, wa huwa rabbul-'arsyil-'aẓīm",
       meaning:
         "Cukuplah Allah bagiku, tiada Tuhan selain Dia. Hanya kepada-Nya aku bertawakkal — Dia Tuhan Arsy yang agung. Dibaca 7x — Allah cukupkan urusan dunia & akhirat.",
+      source: "HR. Abu Dawud no. 5081 (status diperselisihkan: hasan menurut sebagian)",
     },
     ayah: {
       surahName: "At-Talaq",
@@ -213,6 +220,7 @@ export const situations: Situation[] = [
         "Allāhumma innī 'abduk… an taj'alal-Qur'āna rabī'a qalbī wa nūra ṣadrī wa jilā'a ḥuznī wa dzahāba hammī",
       meaning:
         "Doa nabawi panjang yang Rasulullah ﷺ janjikan: 'Tidak ada yang membacanya, kecuali Allah hilangkan kesedihannya dan ganti dengan kegembiraan.'",
+      source: "HR. Ahmad 1/391, dishahihkan Al-Albani dalam Silsilah Sahihah no. 199",
     },
     ayah: {
       surahName: "Asy-Syarh",
@@ -243,6 +251,7 @@ export const situations: Situation[] = [
       transliteration: "A'ūdzu billāhi minasy-syaiṭānir-rajīm",
       meaning:
         "Aku berlindung kepada Allah dari setan yang terkutuk. Diajarkan Nabi ﷺ — saat marah, ucap ini, lalu wudhu, lalu pindah posisi (berdiri ke duduk ke berbaring).",
+      source: "HR. Al-Bukhari no. 3282, Muslim no. 2610 (saat marah). Wudhu saat marah: HR. Abu Dawud no. 4784, hasan",
     },
     ayah: {
       surahName: "Ali Imran",
@@ -276,6 +285,7 @@ export const situations: Situation[] = [
         "Allāhummakfinī biḥalālika 'an ḥarāmika, wa aghninī bifaḍlika 'amman siwāk",
       meaning:
         "Ya Allah, cukupkan aku dengan yang halal dari yang haram, kayakanlah aku dengan karunia-Mu hingga tidak butuh kepada selain-Mu.",
+      source: "HR. At-Tirmidzi no. 3563, Ahmad 1/153, hasan",
     },
     ayah: {
       surahName: "An-Nisa'",
@@ -310,6 +320,7 @@ export const situations: Situation[] = [
         "Allāhumma innī astakhīruka bi'ilmika, wa astaqdiruka biqudratika…",
       meaning:
         "Doa istikharah — diucapkan setelah sholat istikharah 2 rakaat. Lanjutkan dengan menyebut hal yang dipilih dalam hati.",
+      source: "HR. Al-Bukhari no. 1162",
     },
     ayah: {
       surahName: "Al-Baqarah",
@@ -343,6 +354,7 @@ export const situations: Situation[] = [
         "Adzhibil-ba'sa rabban-nāsi, isyfi anta-syāfī, lā syifā'a illā syifā'uk, syifā'an lā yughādiru saqamā",
       meaning:
         "Hilangkan penyakit ini, wahai Rabb manusia. Sembuhkanlah, Engkau Yang Maha Menyembuhkan. Tidak ada kesembuhan kecuali kesembuhan dari-Mu — kesembuhan yang tidak meninggalkan penyakit.",
+      source: "HR. Al-Bukhari no. 5743, Muslim no. 2191",
     },
     ayah: {
       surahName: "Asy-Syu'ara",
@@ -375,6 +387,7 @@ export const situations: Situation[] = [
         "Innā lillāhi wa innā ilaihi rāji'ūn. Allāhumma ajurnī fī muṣībatī wa akhlif lī khairan minhā",
       meaning:
         "Sesungguhnya kami milik Allah, dan kepada-Nya kami kembali. Ya Allah, berilah aku pahala dalam musibahku, dan gantilah dengan yang lebih baik.",
+      source: "QS. Al-Baqarah: 156; lanjutan doa: HR. Muslim no. 918",
     },
     ayah: {
       surahName: "Al-Baqarah",
@@ -408,6 +421,7 @@ export const situations: Situation[] = [
         "Allāhummakfinī biḥalālika 'an ḥarāmika, wa aghninī bifaḍlika 'amman siwāk",
       meaning:
         "Ya Allah, cukupkan aku dengan yang halal dari yang haram, kayakanlah aku dengan karunia-Mu hingga tidak butuh kepada selain-Mu.",
+      source: "HR. At-Tirmidzi no. 3563, Ahmad 1/153, hasan",
     },
     ayah: {
       surahName: "At-Talaq",

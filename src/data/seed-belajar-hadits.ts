@@ -18,18 +18,22 @@ const haditsArbain: LearnTopic = {
       transliteration:
         "Innamal-a'mālu bin-niyyāti, wa innamā likullim-ri'in mā nawā",
       body: "Sesungguhnya amal itu tergantung niatnya. Setiap orang akan dapat sesuai apa yang diniatkan. Hadits paling fundamental dalam Islam — diriwayatkan Umar RA.",
+      source: "HR. Al-Bukhari no. 1, Muslim no. 1907",
     },
     {
       title: "2. Iman, Islam, Ihsan — Hadits #2",
       body: "Saat Jibril datang sebagai laki-laki asing dan bertanya tentang Iman (6 rukun), Islam (5 rukun), dan Ihsan (beribadah seakan melihat Allah). Hadits yang merangkum seluruh ajaran agama.",
+      source: "HR. Muslim no. 8 (hadits Jibril)",
     },
     {
       title: "3. Lima Pilar — Hadits #3",
       body: "Islam dibangun di atas lima: syahadat, sholat, zakat, puasa Ramadhan, haji. Sederhana, tegas, fundamental.",
+      source: "HR. Al-Bukhari no. 8, Muslim no. 16",
     },
     {
       title: "4. Penciptaan Manusia — Hadits #4",
       body: "Setiap kalian dikumpulkan penciptaannya 40 hari sebagai sperma, 40 hari sebagai 'alaqah, 40 hari sebagai mudghah, lalu ditiupkan ruh, ditulis 4 perkara: rezeki, ajal, amal, sengsara/bahagia.",
+      source: "HR. Al-Bukhari no. 3208, Muslim no. 2643",
     },
     {
       title: "5. Yang Tidak Sesuai Sunnah — Hadits #5",
@@ -37,16 +41,19 @@ const haditsArbain: LearnTopic = {
       transliteration:
         "Man aḥdatsa fī amrinā hādzā mā laisa minhu fahuwa raddun",
       body: "Barangsiapa mengada-ada dalam urusan agama kami yang bukan dari kami, maka tertolak. Pondasi mengikuti sunnah, menjauhi bid'ah.",
+      source: "HR. Al-Bukhari no. 2697, Muslim no. 1718",
     },
     {
       title: "6. Halal & Haram Jelas — Hadits #6",
       body: "Yang halal jelas, yang haram jelas, di antaranya ada perkara samar (syubhat). Siapa yang menjauhinya, ia menjaga agama dan kehormatannya. Siapa yang masuk ke syubhat, akan jatuh ke haram. Ada segumpal daging di tubuh — jika baik, baik seluruh tubuh; itulah hati.",
+      source: "HR. Al-Bukhari no. 52, Muslim no. 1599",
     },
     {
       title: "7. Agama adalah Nasihat — Hadits #7",
       arabic: "ٱلدِّينُ ٱلنَّصِيحَةُ",
       transliteration: "Ad-dīnu an-naṣīḥah",
       body: "Agama adalah nasihat. Untuk siapa? Untuk Allah, kitab-Nya, rasul-Nya, para pemimpin Muslim, dan kaum Muslimin pada umumnya. Nasihat di sini = ketulusan dan kebaikan.",
+      source: "HR. Muslim no. 55",
     },
     {
       title: "8. Tinggalkan Yang Tidak Berguna — Hadits #12",
@@ -54,6 +61,7 @@ const haditsArbain: LearnTopic = {
       transliteration:
         "Min ḥusni islāmil-mar'i tarkuhu mā lā ya'nīhi",
       body: "Di antara baiknya keislaman seseorang adalah meninggalkan apa yang tidak berguna baginya. Termasuk: gosip, debat tidak penting, scrolling tanpa arah.",
+      source: "HR. At-Tirmidzi no. 2317, Ibnu Majah no. 3976, hasan",
     },
     {
       title: "9. Mencintai untuk Saudara — Hadits #13",
@@ -62,6 +70,7 @@ const haditsArbain: LearnTopic = {
       transliteration:
         "Lā yu'minu aḥadukum ḥattā yuḥibba li'akhīhi mā yuḥibbu linafsihi",
       body: "Tidak sempurna iman salah seorang kalian sampai ia mencintai untuk saudaranya apa yang ia cintai untuk dirinya. Definisi sederhana cinta yang tulus.",
+      source: "HR. Al-Bukhari no. 13, Muslim no. 45",
     },
     {
       title: "10. Berkata Baik atau Diam — Hadits #15",
@@ -70,16 +79,19 @@ const haditsArbain: LearnTopic = {
       transliteration:
         "Man kāna yu'minu billāhi wal-yaumil-ākhir falyaqul khairan au liyaṣmut",
       body: "Barangsiapa beriman kepada Allah dan hari akhir, hendaklah berkata baik atau diam. Hadits ini menyelamatkan dari ribuan masalah.",
+      source: "HR. Al-Bukhari no. 6018, Muslim no. 47",
     },
     {
       title: "11. Jangan Marah — Hadits #16",
       arabic: "لَا تَغْضَبْ",
       transliteration: "Lā taghḍab",
       body: "Seseorang minta nasihat. Nabi ﷺ menjawab 'Jangan marah.' Diulang berkali-kali. Marah adalah pintu banyak dosa.",
+      source: "HR. Al-Bukhari no. 6116",
     },
     {
       title: "12. Allah Maha Pengampun — Hadits Qudsi #42",
       body: "Allah berfirman: 'Wahai anak Adam, selama kamu berdoa dan berharap pada-Ku, Aku ampuni semua dosamu walau setinggi langit. Wahai anak Adam, jika kamu datang dengan dosa sepenuh bumi, lalu menjumpai-Ku tanpa menyekutukan-Ku, niscaya Aku datang dengan ampunan sepenuhnya.'",
+      source: "HR. At-Tirmidzi no. 3540, hasan",
     },
     {
       title: "Cara mempelajari hadits",
@@ -157,7 +169,8 @@ const haditsQudsi: LearnTopic = {
         "يَا ٱبْنَ آدَمَ، إِنَّكَ مَا دَعَوْتَنِي وَرَجَوْتَنِي غَفَرْتُ لَكَ عَلَىٰ مَا كَانَ مِنْكَ وَلَا أُبَالِي",
       transliteration:
         "Yābna ādam, innaka mā da'autanī wa rajautanī ghafartu laka 'alā mā kāna minka wa lā ubālī",
-      body: "Wahai anak Adam, selama kau berdoa dan berharap pada-Ku, Aku ampuni semua dosamu, dan Aku tidak peduli (seberapa banyak). (HR. Tirmidzi)",
+      body: "Wahai anak Adam, selama kau berdoa dan berharap pada-Ku, Aku ampuni semua dosamu, dan Aku tidak peduli (seberapa banyak).",
+      source: "HR. At-Tirmidzi no. 3540, hasan",
     },
     {
       title: "2. Mendekat sehasta",
@@ -165,7 +178,8 @@ const haditsQudsi: LearnTopic = {
         "إِذَا تَقَرَّبَ ٱلْعَبْدُ مِنِّي شِبْرًا تَقَرَّبْتُ مِنْهُ ذِرَاعًا، وَإِذَا تَقَرَّبَ مِنِّي ذِرَاعًا تَقَرَّبْتُ مِنْهُ بَاعًا، وَإِذَا أَتَانِي يَمْشِي أَتَيْتُهُ هَرْوَلَةً",
       transliteration:
         "Idzā taqarraba al-'abdu minnī syibran taqarrabtu minhu dzirā'an…",
-      body: "Jika hamba-Ku mendekat sejengkal, Aku mendekat sehasta. Jika mendekat sehasta, Aku mendekat sedepa. Jika datang berjalan, Aku datang berlari. (HR. Bukhari)",
+      body: "Jika hamba-Ku mendekat sejengkal, Aku mendekat sehasta. Jika mendekat sehasta, Aku mendekat sedepa. Jika datang berjalan, Aku datang berlari.",
+      source: "HR. Al-Bukhari no. 7405, Muslim no. 2675",
     },
     {
       title: "3. Setiap amal untuk-Nya",
@@ -173,13 +187,15 @@ const haditsQudsi: LearnTopic = {
         "كُلُّ عَمَلِ ٱبْنِ آدَمَ لَهُ إِلَّا ٱلصَّوْمَ، فَإِنَّهُ لِي وَأَنَا أَجْزِي بِهِ",
       transliteration:
         "Kullu 'amali bni ādama lahu illaṣ-ṣauma, fa'innahu lī wa anā ajzī bihi",
-      body: "Setiap amal anak Adam itu untuknya, kecuali puasa. Sesungguhnya puasa itu untuk-Ku, dan Aku sendiri yang akan membalasnya. (HR. Bukhari & Muslim)",
+      body: "Setiap amal anak Adam itu untuknya, kecuali puasa. Sesungguhnya puasa itu untuk-Ku, dan Aku sendiri yang akan membalasnya.",
+      source: "HR. Al-Bukhari no. 1894, Muslim no. 1151",
     },
     {
       title: "4. Allah seperti yang hamba sangka",
       arabic: "أَنَا عِنْدَ ظَنِّ عَبْدِي بِي",
       transliteration: "Anā 'inda ẓanni 'abdī bī",
-      body: "Aku berada pada sangkaan hamba-Ku terhadap-Ku. Maka berbaiksangkalah pada-Nya — saat berdoa, saat susah, saat senang. (HR. Bukhari & Muslim)",
+      body: "Aku berada pada sangkaan hamba-Ku terhadap-Ku. Maka berbaiksangkalah pada-Nya — saat berdoa, saat susah, saat senang.",
+      source: "HR. Al-Bukhari no. 7405, Muslim no. 2675",
     },
     {
       title: "5. Cinta-Nya pada hamba yang ber-nawafil",
@@ -187,7 +203,8 @@ const haditsQudsi: LearnTopic = {
         "وَمَا تَقَرَّبَ إِلَيَّ عَبْدِي بِشَيْءٍ أَحَبَّ إِلَيَّ مِمَّا ٱفْتَرَضْتُ عَلَيْهِ، وَمَا يَزَالُ عَبْدِي يَتَقَرَّبُ إِلَيَّ بِٱلنَّوَافِلِ حَتَّىٰ أُحِبَّهُ",
       transliteration:
         "Wa mā taqarraba ilayya 'abdī bisyai'in aḥabba ilayya mimmaftaraḍtu 'alaihi, wa mā yazālu 'abdī yataqarrabu ilayya bin-nawāfili ḥattā uḥibbahu",
-      body: "Tidak ada amal yang lebih Aku cintai dari hamba-Ku selain yang Aku wajibkan. Dan hamba-Ku tetap mendekat pada-Ku dengan amalan sunnah, sampai Aku mencintainya. (HR. Bukhari)",
+      body: "Tidak ada amal yang lebih Aku cintai dari hamba-Ku selain yang Aku wajibkan. Dan hamba-Ku tetap mendekat pada-Ku dengan amalan sunnah, sampai Aku mencintainya.",
+      source: "HR. Al-Bukhari no. 6502",
     },
     {
       title: "6. Lanjutan: 'Aku menjadi pendengaran & penglihatannya'",
@@ -195,7 +212,8 @@ const haditsQudsi: LearnTopic = {
         "فَإِذَا أَحْبَبْتُهُ كُنْتُ سَمْعَهُ ٱلَّذِي يَسْمَعُ بِهِ، وَبَصَرَهُ ٱلَّذِي يُبْصِرُ بِهِ",
       transliteration:
         "Fa'idzā aḥbabtuhu kuntu sam'ahul-ladzī yasma'u bihi, wa baṣarahul-ladzī yubṣiru bihi",
-      body: "Jika Aku mencintainya, Akulah pendengarannya yang dia dengar dengannya, penglihatannya yang dia lihat dengannya, tangannya yang dia gunakan, dan kakinya yang dia berjalan. (HR. Bukhari)",
+      body: "Jika Aku mencintainya, Akulah pendengarannya yang dia dengar dengannya, penglihatannya yang dia lihat dengannya, tangannya yang dia gunakan, dan kakinya yang dia berjalan.",
+      source: "HR. Al-Bukhari no. 6502 (lanjutan hadits sebelumnya)",
     },
     {
       title: "7. Doa terkabul, ampunan hadir",
@@ -203,7 +221,8 @@ const haditsQudsi: LearnTopic = {
         "يَا ٱبْنَ آدَمَ، لَوْ أَتَيْتَنِي بِقُرَابِ ٱلْأَرْضِ خَطَايَا، ثُمَّ لَقِيتَنِي لَا تُشْرِكُ بِي شَيْئًا، لَأَتَيْتُكَ بِقُرَابِهَا مَغْفِرَةً",
       transliteration:
         "Yābna ādam, lau ataitanī biqurābil-arḍi khaṭāyā, tsumma laqītanī lā tusyriku bī syai'an, la-ataituka biqurābihā maghfirah",
-      body: "Wahai anak Adam, jika kau datang pada-Ku dengan dosa sepenuh bumi, lalu menjumpai-Ku tanpa menyekutukan-Ku, Aku datang dengan ampunan sepenuh bumi pula. (HR. Tirmidzi)",
+      body: "Wahai anak Adam, jika kau datang pada-Ku dengan dosa sepenuh bumi, lalu menjumpai-Ku tanpa menyekutukan-Ku, Aku datang dengan ampunan sepenuh bumi pula.",
+      source: "HR. At-Tirmidzi no. 3540, hasan",
     },
     {
       title: "8. Allah cinta yang lembut",
@@ -211,13 +230,15 @@ const haditsQudsi: LearnTopic = {
         "إِنَّ ٱللَّٰهَ رَفِيقٌ يُحِبُّ ٱلرِّفْقَ فِي ٱلْأَمْرِ كُلِّهِ",
       transliteration:
         "Innallāha rafīqun yuḥibbur-rifqa fil-amri kullihi",
-      body: "Sesungguhnya Allah Maha Lembut, dan mencintai kelembutan dalam segala urusan. (HR. Bukhari & Muslim)",
+      body: "Sesungguhnya Allah Maha Lembut, dan mencintai kelembutan dalam segala urusan.",
+      source: "HR. Al-Bukhari no. 6024, Muslim no. 2165",
     },
     {
       title: "9. Doa adalah ibadah",
       arabic: "ٱلدُّعَاءُ هُوَ ٱلْعِبَادَةُ",
       transliteration: "Ad-du'ā'u huwal-'ibādah",
-      body: "Doa itu sendiri adalah ibadah. (HR. Tirmidzi). Walau belum dikabulkan, doamu sudah dicatat sebagai amal.",
+      body: "Doa itu sendiri adalah ibadah. Walau belum dikabulkan, doamu sudah dicatat sebagai amal.",
+      source: "HR. At-Tirmidzi no. 2969, Abu Dawud no. 1479, sahih",
     },
     {
       title: "10. Allah tidak melihat rupa & harta",
@@ -225,7 +246,8 @@ const haditsQudsi: LearnTopic = {
         "إِنَّ ٱللَّٰهَ لَا يَنْظُرُ إِلَىٰ صُوَرِكُمْ وَأَمْوَالِكُمْ، وَلَٰكِنْ يَنْظُرُ إِلَىٰ قُلُوبِكُمْ وَأَعْمَالِكُمْ",
       transliteration:
         "Innallāha lā yanẓuru ilā ṣuwarikum wa amwālikum, walākin yanẓuru ilā qulūbikum wa a'mālikum",
-      body: "Sesungguhnya Allah tidak melihat tubuh kalian dan rupa kalian, tapi Dia melihat hati dan amal kalian. (HR. Muslim)",
+      body: "Sesungguhnya Allah tidak melihat tubuh kalian dan rupa kalian, tapi Dia melihat hati dan amal kalian.",
+      source: "HR. Muslim no. 2564",
     },
     {
       title: "11. Janji mempersiapkan untuk yang taat",
@@ -233,7 +255,8 @@ const haditsQudsi: LearnTopic = {
         "أَعْدَدْتُ لِعِبَادِيَ ٱلصَّالِحِينَ مَا لَا عَيْنٌ رَأَتْ، وَلَا أُذُنٌ سَمِعَتْ، وَلَا خَطَرَ عَلَىٰ قَلْبِ بَشَرٍ",
       transliteration:
         "A'dadtu li'ibādiyaṣ-ṣāliḥīna mā lā 'ainun ra'at, wa lā udzunun sami'at, wa lā khaṭara 'alā qalbi basyarin",
-      body: "Aku siapkan untuk hamba-Ku yang shalih: apa yang belum pernah dilihat mata, didengar telinga, dan terlintas di hati manusia. (HR. Bukhari & Muslim) — Yaitu surga.",
+      body: "Aku siapkan untuk hamba-Ku yang shalih: apa yang belum pernah dilihat mata, didengar telinga, dan terlintas di hati manusia. Yaitu surga.",
+      source: "HR. Al-Bukhari no. 4779, Muslim no. 2824",
     },
     {
       title: "12. Saat dzikir, Allah ingat balik",
@@ -241,7 +264,8 @@ const haditsQudsi: LearnTopic = {
         "أَنَا مَعَ عَبْدِي إِذَا ذَكَرَنِي، فَإِنْ ذَكَرَنِي فِي نَفْسِهِ ذَكَرْتُهُ فِي نَفْسِي، وَإِنْ ذَكَرَنِي فِي مَلَإٍ ذَكَرْتُهُ فِي مَلَإٍ خَيْرٍ مِنْهُمْ",
       transliteration:
         "Anā ma'a 'abdī idzā dzakaranī, fa'in dzakaranī fī nafsihi dzakartuhu fī nafsī, wa in dzakaranī fī mala'in dzakartuhu fī mala'in khairin minhum",
-      body: "Aku bersama hamba-Ku saat dia mengingat-Ku. Jika dia ingat-Ku dalam dirinya, Aku ingat dia dalam diri-Ku. Jika dia ingat-Ku dalam suatu kumpulan, Aku ingat dia dalam kumpulan yang lebih baik (yaitu para malaikat). (HR. Bukhari)",
+      body: "Aku bersama hamba-Ku saat dia mengingat-Ku. Jika dia ingat-Ku dalam dirinya, Aku ingat dia dalam diri-Ku. Jika dia ingat-Ku dalam suatu kumpulan, Aku ingat dia dalam kumpulan yang lebih baik (yaitu para malaikat).",
+      source: "HR. Al-Bukhari no. 7405, Muslim no. 2675",
     },
     {
       title: "13. Sakit dan ujian — kasih sayang",
@@ -249,7 +273,8 @@ const haditsQudsi: LearnTopic = {
         "إِذَا أَحَبَّ ٱللَّٰهُ قَوْمًا ٱبْتَلَاهُمْ، فَمَنْ رَضِيَ فَلَهُ ٱلرِّضَا، وَمَنْ سَخِطَ فَلَهُ ٱلسَّخَطُ",
       transliteration:
         "Idzā aḥabballāhu qauman ibtalāhum, faman raḍiya falahur-riḍā, wa man sakhiṭa falahus-sakhaṭ",
-      body: "Jika Allah mencintai suatu kaum, Dia menguji mereka. Yang ridha mendapat ridha, yang kesal mendapat kesalan. (HR. Tirmidzi)",
+      body: "Jika Allah mencintai suatu kaum, Dia menguji mereka. Yang ridha mendapat ridha, yang kesal mendapat kesalan.",
+      source: "HR. At-Tirmidzi no. 2396, Ibnu Majah no. 4031, hasan",
     },
     {
       title: "Cara membaca hadits qudsi",

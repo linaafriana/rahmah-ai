@@ -75,6 +75,8 @@ export interface LearnItem {
   transliteration?: string;
   body: string;
   audioPublicId?: string;
+  /** Hadith / ayah citation for verification (e.g. "HR. Bukhari no. 123" or "QS. Al-Baqarah: 286"). */
+  source?: string;
 }
 
 export interface LearnTopic {
