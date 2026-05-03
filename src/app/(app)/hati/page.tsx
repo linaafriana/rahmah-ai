@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -18,6 +19,35 @@ import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { useAuth } from "@/providers/AuthProvider";
 import { id as t } from "@/lib/i18n/id";
+
+// Pulled off the home page (which now focuses on tasks). Lazy-loaded so
+// the menu items render instantly even on slow connections.
+const DailyContentCard = dynamic(
+  () =>
+    import("@/components/home/DailyContentCard").then(
+      (m) => m.DailyContentCard,
+    ),
+  { ssr: false },
+);
+const BulanHijriahCard = dynamic(
+  () =>
+    import("@/components/home/BulanHijriahCard").then(
+      (m) => m.BulanHijriahCard,
+    ),
+  { ssr: false },
+);
+const TimeSpotlightCard = dynamic(
+  () =>
+    import("@/components/home/TimeSpotlightCard").then(
+      (m) => m.TimeSpotlightCard,
+    ),
+  { ssr: false },
+);
+const DzikirTotalCard = dynamic(
+  () =>
+    import("@/components/home/DzikirTotalCard").then((m) => m.DzikirTotalCard),
+  { ssr: false },
+);
 
 const items = [
   {
@@ -99,7 +129,19 @@ export default function HatiPage() {
         <p className="mt-1 text-sm text-ink-soft">{t.hati.subtitle}</p>
       </header>
 
+      {/* ── Renungan harian + konteks waktu (pindah dari home) ── */}
       <section className="space-y-3">
+        <DailyContentCard />
+        <TimeSpotlightCard />
+        <BulanHijriahCard />
+        <DzikirTotalCard />
+      </section>
+
+      {/* ── Menu utama ──────────────────────────────────────── */}
+      <section className="space-y-3">
+        <p className="px-1 text-[11px] font-semibold uppercase tracking-widest text-ink-muted">
+          Menu
+        </p>
         {items.map(({ href, title, desc, Icon, tone }) => (
           <Link key={href} href={href} className="block">
             <Card tone={tone}>

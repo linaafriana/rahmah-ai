@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/Card";
-import { Blob } from "@/components/illustrations/Blob";
 import { id as t } from "@/lib/i18n/id";
 
 type Slot = "morning" | "midday" | "afternoon" | "evening";
@@ -21,43 +19,37 @@ function slotForHour(hour: number): Slot {
   return "evening";
 }
 
+/**
+ * Compact greeting — header text only, no oversized illustrations. The
+ * cards beneath this carry visual weight; the header just orients the
+ * user with name + day-part + date.
+ */
 export function GreetingHeader({ name }: { name: string }) {
   // Default to "morning" on the server to keep SSR stable; refine on client.
   const [slot, setSlot] = useState<Slot>("morning");
+  const [dateLabel, setDateLabel] = useState("");
 
   useEffect(() => {
-    setSlot(slotForHour(new Date().getHours()));
+    const now = new Date();
+    setSlot(slotForHour(now.getHours()));
+    setDateLabel(
+      now.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      }),
+    );
   }, []);
 
   return (
-    <Card tone="primary" className="overflow-hidden">
-      <Blob
-        color="#FFF6F0"
-        size={180}
-        className="absolute -right-10 -top-10 opacity-90"
-      />
-      <Blob
-        color="#FFD66B"
-        size={90}
-        className="absolute -bottom-6 right-10 opacity-50"
-        delay={1}
-      />
-      <div className="relative">
-        <p className="text-xs font-medium uppercase tracking-widest text-primary/80">
-          {t.home.timeOfDay[slot]} {slotEmoji[slot]} ·{" "}
-          {new Date().toLocaleDateString("id-ID", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          })}
-        </p>
-        <h1 className="mt-1 text-2xl font-bold text-ink">
-          {t.home.greeting(name)}
-        </h1>
-        <p className="mt-2 text-sm text-ink-soft">
-          {t.home.intentionPrompt}
-        </p>
-      </div>
-    </Card>
+    <header className="px-1">
+      <p className="text-[11px] font-semibold uppercase tracking-widest text-primary/80">
+        {t.home.timeOfDay[slot]} {slotEmoji[slot]}
+        {dateLabel && <span className="text-ink-muted"> · {dateLabel}</span>}
+      </p>
+      <h1 className="mt-1 text-2xl font-bold leading-tight text-ink">
+        {t.home.greeting(name)}
+      </h1>
+    </header>
   );
 }

@@ -130,6 +130,11 @@ export default function BelajarTopicPage({
                   <p className="mt-2 text-sm leading-relaxed text-ink">
                     {item.body}
                   </p>
+                  {item.source && (
+                    <p className="mt-2 text-[11px] text-ink-muted">
+                      📖 {item.source}
+                    </p>
+                  )}
                   <div className="mt-3">
                     <BelajarStepCheck slug={topic.slug} index={idx} />
                   </div>

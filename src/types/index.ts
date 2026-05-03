@@ -23,6 +23,10 @@ export interface DzikirItem {
   meaning: string;
   audioPublicId?: string;
   defaultCount: number;
+  /** Hadith citation for verification — e.g. "HR. Bukhari no. 6306" */
+  source?: string;
+  /** Short benefit / fadhilah from the hadith */
+  benefit?: string;
 }
 
 export interface Reflection {
@@ -71,6 +75,8 @@ export interface LearnItem {
   transliteration?: string;
   body: string;
   audioPublicId?: string;
+  /** Hadith / ayah citation for verification (e.g. "HR. Bukhari no. 123" or "QS. Al-Baqarah: 286"). */
+  source?: string;
 }
 
 export interface LearnTopic {

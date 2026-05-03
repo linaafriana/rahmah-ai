@@ -82,12 +82,22 @@ export function DzikirCard({ item }: { item: DzikirItem }) {
           className="hidden"
         />
       )}
+      {item.benefit && (
+        <p className="mt-3 rounded-card bg-accent-tint/50 px-3 py-2 text-[11px] leading-relaxed text-ink-soft">
+          ✨ {item.benefit}
+        </p>
+      )}
       <div className="mt-5 flex justify-center">
         <DzikirCounter
           target={item.defaultCount}
           onIncrement={onIncrement}
         />
       </div>
+      {item.source && (
+        <p className="mt-3 text-center text-[10px] text-ink-muted">
+          📖 {item.source}
+        </p>
+      )}
       {hint && (
         <p className="mt-3 text-center text-xs text-ink-muted">{hint}</p>
       )}
