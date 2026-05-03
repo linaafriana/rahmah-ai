@@ -5,9 +5,11 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { GreetingHeader } from "@/components/home/GreetingHeader";
 import { PrayerCard } from "@/components/home/PrayerCard";
+import { HaidModeCard } from "@/components/home/HaidModeCard";
 import { QuickActionsRow } from "@/components/home/QuickActionsRow";
 import { NiatBesokCard } from "@/components/home/NiatBesokCard";
 import { LanjutkanCard } from "@/components/home/LanjutkanCard";
+import { HAID_EVENT, isHaidActive } from "@/lib/haid";
 import { KembaliBanner } from "@/components/home/KembaliBanner";
 import { SpecialDayBanner } from "@/components/home/SpecialDayBanner";
 import { InstallPrompt } from "@/components/home/InstallPrompt";
@@ -62,6 +64,21 @@ export default function HomePage() {
   const [, setPosition] = useState<QuranPosition>(fallbackPosition);
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  const [haid, setHaid] = useState(false);
+
+  // Track haid mode state (cross-tab via storage event, same-tab via custom)
+  useEffect(() => {
+    setHaid(isHaidActive());
+    function refresh() {
+      setHaid(isHaidActive());
+    }
+    window.addEventListener(HAID_EVENT, refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener(HAID_EVENT, refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
   // `dateKey` triggers a reload of daily-keyed state when the local date
   // rolls over (midnight while the tab is open, or returning to a tab
   // whose state was saved before midnight).
@@ -184,7 +201,11 @@ export default function HomePage() {
 
       {/* ── Task hub: sholat + habits stacked at the top ─────────── */}
       <motion.div variants={item}>
-        <PrayerCard value={progress} onChange={onPrayerChange} />
+        {haid ? (
+          <HaidModeCard />
+        ) : (
+          <PrayerCard value={progress} onChange={onPrayerChange} />
+        )}
       </motion.div>
       <motion.div variants={item}>
         <HabitTracker />

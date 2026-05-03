@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowLeft, Check, Clock, LogOut, MapPin } from "lucide-react";
+import { ArrowLeft, Check, Clock, Heart, LogOut, MapPin } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/providers/AuthProvider";
 import { RECITERS, DEFAULT_RECITER_ID } from "@/lib/quran";
+import { isHaidActive, setHaidActive } from "@/lib/haid";
 import {
   DEFAULT_METHOD,
   PRAYER_METHODS,
@@ -40,6 +41,7 @@ export default function PengaturanPage() {
   const [tune, setTune] = useState<TuneOffsets>(ZERO_TUNE);
   const [saved, setSaved] = useState(false);
   const [hasLocation, setHasLocation] = useState(false);
+  const [haid, setHaid] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -49,7 +51,14 @@ export default function PengaturanPage() {
     setHasLocation(!!window.localStorage.getItem("sakinah:coords"));
     setMethod(readUserMethod());
     setTune(readUserTune());
+    setHaid(isHaidActive());
   }, [user]);
+
+  function toggleHaid() {
+    const next = !haid;
+    setHaid(next);
+    setHaidActive(next);
+  }
 
   function save() {
     if (typeof window !== "undefined") {
@@ -248,6 +257,47 @@ export default function PengaturanPage() {
             jadwal Kemenag resmi.
           </p>
         </div>
+      </Card>
+
+      <Card tone="white">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <Heart size={14} className="text-rose-400" />
+              <h2 className="text-sm font-bold text-ink">Mode haid</h2>
+            </div>
+            <p className="mt-1 text-[11px] leading-relaxed text-ink-soft">
+              Sembunyikan tracker sholat saat sedang haid. Diganti dengan
+              card lembut + amalan yang tetap bisa dilakukan (dzikir, doa,
+              belajar). Disimpan hanya di perangkatmu — tidak ke server.
+            </p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={haid}
+            onClick={toggleHaid}
+            className={
+              "relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-pill transition-colors " +
+              (haid ? "bg-rose-300" : "bg-ink/15")
+            }
+          >
+            <span
+              className={
+                "inline-block h-5 w-5 transform rounded-full bg-white shadow-soft transition-transform " +
+                (haid ? "translate-x-6" : "translate-x-1")
+              }
+            />
+          </button>
+        </div>
+        {haid && (
+          <Link
+            href="/belajar/hukum-darah-wanita"
+            className="mt-3 inline-flex items-center gap-1 rounded-pill bg-rose-50 px-3 py-1.5 text-[11px] font-semibold text-rose-500 hover:bg-rose-100"
+          >
+            📖 Buka panduan lengkap
+          </Link>
+        )}
       </Card>
 
       <Card tone="white">
