@@ -23,6 +23,10 @@ export interface DzikirItem {
   meaning: string;
   audioPublicId?: string;
   defaultCount: number;
+  /** Hadith citation for verification — e.g. "HR. Bukhari no. 6306" */
+  source?: string;
+  /** Short benefit / fadhilah from the hadith */
+  benefit?: string;
 }
 
 export interface Reflection {
