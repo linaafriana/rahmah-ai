@@ -1,9 +1,21 @@
 // Per-Hijri-month context: keutamaan, saran amalan, hari-hari khusus.
-// Sumber: Muslim Planner 2026 + tradisi ulama untuk amalan bulan Rajab.
+//
+// Sumber rujukan (manhaj Ahlussunnah, mengikut hadits shahih):
+//   - "Do'a & Wirid" — Yazid bin Abdul Qadir Jawas (cet. ke-34, Pustaka Imam asy-Syafi'i)
+//   - "Di Rumah Saja" — Yazid bin Abdul Qadir Jawas (1441 H / 2020 M)
+//
+// Catatan: konten amalan spesifik bulan Rajab (Tasbih Rajab,
+// Laylatul Raghaib, doa "Allāhumma bārik lanā fī Rajab",
+// istighfar 70x khusus Rajab, puasa khusus 27 Rajab, dll) yang
+// sebelumnya ada di file ini DIHAPUS — sumber-sumbernya berasal
+// dari hadits dho'if/maudhu' yang tidak diakui oleh ulama hadits
+// kontemporer (Al-Albani, Ibnul Qayyim, dll). Begitu pula
+// amalan khusus Nishfu Sya'ban dan beberapa angka pelipatan
+// pahala yang tidak punya dasar shahih.
 
 export type SpecialDayMarker = {
   day: number; // hari Hijriah
-  name: string; // nama hari (Isra Mi'raj, Ayyamul Bidh, dll)
+  name: string; // nama hari (Ayyamul Bidh, Idul Fitri, Hari Arafah, dll)
   amalan?: string; // amalan singkat
 };
 
@@ -182,30 +194,23 @@ export const hijriMonths: HijriMonthInfo[] = [
     emoji: "🌸",
     isHaram: true,
     intro:
-      "Bulan haram dan disebut Syahrullah (Bulan Allah). Para ulama menyebutnya 'bulan menanam' menuju Ramadan: Rajab menanam, Sya'ban menyiram, Ramadan memanen. Pada 27 Rajab terjadi Isra' Mi'raj — pemberian perintah sholat.",
+      "Salah satu dari empat bulan haram (At-Taubah: 36). Tidak ada amalan khusus untuk Rajab dari Rasulullah ﷺ — yang ditekankan adalah meninggalkan kezaliman dan menjaga ketaatan rutin sebagaimana di bulan-bulan lain.",
     keutamaan: [
-      "Salah satu dari empat bulan haram — pahala dan dosa dilipatgandakan.",
-      "Disebut Syahrullah (Bulan Allah).",
-      "Dijuluki Al-Ashabb — bulan yang mengucur rahmat dan ampunan.",
-      "Pada 27 Rajab terjadi Isra' Mi'raj dan turunnya perintah sholat 5 waktu.",
-      "Jembatan menuju Ramadan — bulan untuk mulai persiapan spiritual.",
+      "Salah satu dari empat bulan haram (Muharram, Rajab, Dzulqa'dah, Dzulhijjah) — Allah melarang kezaliman pada bulan-bulan ini secara lebih tegas (QS. At-Taubah: 36).",
+      "Bukan bulan dengan amalan khusus tertentu — Imam Ibnu Rajab Al-Hanbali, Ibnul Qayyim, dan Al-Albani menjelaskan bahwa hadits-hadits keutamaan khusus Rajab umumnya dho'if atau maudhu'.",
     ],
     saranAmalan: [
-      "Memperbanyak istighfar — Rajab disebut Syahrul Istighfar. Salah satu lafaz: 'Rabbighfirlī warḥamnī watub 'alayya' (70x pagi & sore).",
-      "Doa memasuki Rajab: 'Allāhumma bārik lanā fī Rajaba wa Sya'bāna wa balligh-nā Ramaḍāna.'",
-      "Puasa sunnah — terutama Senin & Kamis dan Ayyamul Bidh.",
-      "Menjauhi maksiat lebih ketat — dosa di bulan haram lebih besar ancamannya.",
-      "Memperbanyak sholawat dan dzikir.",
-      "Bersedekah harian walau kecil — pahala dilipatgandakan.",
+      "Lebih hati-hati menjauhi maksiat — kezaliman di bulan haram diperberat (QS. At-Taubah: 36).",
+      "Konsistensi ibadah rutin: sholat 5 waktu tepat waktu, sunnah rawatib, dzikir pagi & petang.",
+      "Puasa sunnah Senin-Kamis dan Ayyamul Bidh (13–15) — sebagaimana di bulan lain, bukan khusus Rajab.",
+      "Memperbanyak istighfar harian dan sedekah, tanpa lafaz/jumlah khusus yang dikaitkan dengan Rajab.",
     ],
     specialDays: [
-      { day: 1, name: "Awal Rajab", amalan: "Doa 'Allahumma barik lana fi Rajab', sholat hajat" },
-      { day: 13, name: "Ayyamul Bidh Rajab", amalan: "Puasa + qiyamul lail" },
-      { day: 14, name: "Ayyamul Bidh Rajab", amalan: "Puasa + qiyamul lail" },
-      { day: 15, name: "Ayyamul Bidh Rajab", amalan: "Puasa + qiyamul lail" },
-      { day: 27, name: "Isra' Mi'raj", amalan: "Puasa, sholawat, kaji sejarah perintah sholat" },
+      { day: 13, name: "Ayyamul Bidh", amalan: "Puasa sunnah" },
+      { day: 14, name: "Ayyamul Bidh", amalan: "Puasa sunnah" },
+      { day: 15, name: "Ayyamul Bidh", amalan: "Puasa sunnah" },
     ],
-    closing: "Rajab adalah saat menanam. Yang ditanam dengan istighfar dan sedekah hari ini, akan dipanen di Ramadan.",
+    closing: "Yang utama bukan amalan musiman, tapi keistiqomahan kecil yang berlanjut sepanjang tahun.",
   },
   {
     number: 8,
@@ -214,25 +219,23 @@ export const hijriMonths: HijriMonthInfo[] = [
     emoji: "🌱",
     isHaram: false,
     intro:
-      "Bulan diangkatnya amal manusia kepada Allah. Rasulullah ﷺ paling banyak berpuasa sunnah di bulan ini (selain Ramadan). Bulan menyiram menuju Ramadan.",
+      "Bulan di mana Rasulullah ﷺ paling banyak berpuasa sunnah selain Ramadhan (HR. Bukhari & Muslim dari 'Aisyah ra). Persiapan menuju Ramadhan dengan ibadah rutin.",
     keutamaan: [
-      "Bulan diangkatnya amal manusia kepada Allah.",
-      "Rasulullah ﷺ paling banyak puasa sunnah di bulan ini.",
-      "Pertengahan Sya'ban (Nishfu Sya'ban) — malam pengampunan.",
-      "Bulan persiapan Ramadan — saat menyiram tanaman spiritual.",
+      "Rasulullah ﷺ paling banyak puasa sunnah di bulan ini, selain Ramadhan (HR. Bukhari no. 1969 & Muslim no. 1156).",
+      "Bulan diangkatnya amal kepada Allah — Rasulullah ﷺ menyukai amalnya diangkat dalam keadaan berpuasa (HR. An-Nasa'i, hasan).",
     ],
     saranAmalan: [
-      "Memperbanyak puasa sunnah — terutama di pertengahan bulan.",
-      "Qadha puasa Ramadan tahun lalu sebelum Ramadan berikutnya.",
-      "Memperbanyak Al-Qur'an, dzikir, dan doa sebagai persiapan Ramadan.",
-      "Niatkan target Ramadan: tilawah, qiyamul lail, sedekah.",
+      "Memperbanyak puasa sunnah — Senin & Kamis, Ayyamul Bidh, atau puasa berturut.",
+      "Qadha puasa Ramadhan tahun lalu sebelum Ramadhan berikutnya.",
+      "Memperbanyak tilawah Al-Qur'an dan dzikir rutin sebagai persiapan Ramadhan.",
+      "Menyusun target Ramadhan: target khatam Qur'an, sholat berjamaah, sedekah harian.",
     ],
     specialDays: [
-      { day: 13, name: "Ayyamul Bidh Sya'ban", amalan: "Puasa sunnah" },
-      { day: 14, name: "Ayyamul Bidh Sya'ban", amalan: "Puasa sunnah" },
-      { day: 15, name: "Nishfu Sya'ban", amalan: "Puasa, doa, dzikir, persiapan Ramadan" },
+      { day: 13, name: "Ayyamul Bidh", amalan: "Puasa sunnah" },
+      { day: 14, name: "Ayyamul Bidh", amalan: "Puasa sunnah" },
+      { day: 15, name: "Ayyamul Bidh", amalan: "Puasa sunnah" },
     ],
-    closing: "Sya'ban adalah saat menyiram. Persiapkan dirimu — Ramadan akan datang.",
+    closing: "Persiapan Ramadhan paling baik bukan amalan musiman, tapi membiasakan ketaatan sehari-hari sejak sekarang.",
   },
   {
     number: 9,
@@ -243,11 +246,10 @@ export const hijriMonths: HijriMonthInfo[] = [
     intro:
       "Sayyidus Syuhur — penghulu segala bulan. Bulan diturunkannya Al-Qur'an, dilipatgandakannya pahala, dan terdapat Lailatul Qadar (malam yang lebih baik dari 1000 bulan).",
     keutamaan: [
-      "Bulan paling mulia — Sayyidus Syuhur.",
-      "Bulan diturunkannya Al-Qur'an.",
-      "Pintu surga dibuka, pintu neraka ditutup, syaitan dibelenggu.",
-      "Lailatul Qadar — malam yang lebih baik dari 1000 bulan.",
-      "Setiap amal dilipatgandakan — wajib jadi 70x lipat, sunnah jadi wajib.",
+      "Bulan diturunkannya Al-Qur'an (QS. Al-Baqarah: 185).",
+      "Pintu-pintu surga dibuka, pintu-pintu neraka ditutup, dan syaitan-syaitan dibelenggu (HR. Bukhari & Muslim).",
+      "Di dalamnya terdapat Lailatul Qadar — malam yang lebih baik dari seribu bulan (QS. Al-Qadr: 3).",
+      "Pahala amal sholih sangat besar dan istimewa — Rasulullah ﷺ menggambarkannya sebagai bulan kesabaran dan bulan ampunan (HR. Ibnu Khuzaimah).",
     ],
     saranAmalan: [
       "Puasa wajib — sebulan penuh dengan niat ikhlas.",
@@ -263,7 +265,7 @@ export const hijriMonths: HijriMonthInfo[] = [
       { day: 21, name: "Mulai 10 hari terakhir", amalan: "I'tikaf, tahajud, doa Lailatul Qadar" },
       { day: 27, name: "Malam yang sering disebut sebagai Lailatul Qadar", amalan: "Qiyamul lail, doa lailatul qadar" },
     ],
-    closing: "Ramadan adalah panen. Yang ditanam di Rajab, disiram di Sya'ban, kini berbuah. Manfaatkan setiap detik.",
+    closing: "Bulan paling istimewa untuk kembali kepada Allah — manfaatkan setiap waktunya.",
   },
   {
     number: 10,
