@@ -3,11 +3,14 @@
 // the model to refuse politely if uncertain, always cite sources, and
 // avoid giving personal fatwa for sensitive matters.
 //
-// Note: requires ANTHROPIC_API_KEY env var. Without it, the route
-// returns a graceful "belum dikonfigurasi" message so dev/preview tetap
-// jalan tanpa crash.
+// Backend: DeepSeek (OpenAI-compatible Chat Completions API). Cheap +
+// capable enough for grounded Q&A. We use plain `fetch` rather than
+// pulling in the OpenAI SDK to keep the bundle slim.
+//
+// Requires DEEPSEEK_API_KEY env var. Without it, the route returns a
+// graceful "belum dikonfigurasi" message so dev/preview tetap jalan
+// tanpa crash.
 
-import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -57,6 +60,15 @@ ATURAN KETAT (wajib diikuti):
 
 Sekarang jawab pertanyaan user.`;
 
+const DEEPSEEK_URL = "https://api.deepseek.com/chat/completions";
+
+type DeepSeekResponse = {
+  choices?: Array<{
+    message?: { content?: string };
+  }>;
+  error?: { message?: string };
+};
+
 export async function POST(request: Request) {
   let body: RequestBody;
   try {
@@ -82,19 +94,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) {
     return NextResponse.json({
       answer:
-        "AI assistant belum dikonfigurasi. Tambahkan ANTHROPIC_API_KEY ke environment variables agar fitur ini aktif. Sementara itu, untuk pertanyaan agama silakan kunjungi rumaysho.com, muslim.or.id, atau tanya ustadz/ustadzah yang Anda percayai 🤍",
+        "AI assistant belum dikonfigurasi. Tambahkan DEEPSEEK_API_KEY ke environment variables agar fitur ini aktif. Sementara itu, untuk pertanyaan agama silakan kunjungi rumaysho.com, muslim.or.id, atau tanya ustadz/ustadzah yang Anda percayai 🤍",
     });
   }
-
-  const client = new Anthropic({ apiKey });
 
   // Build history. Take last ~6 turns to keep context bounded.
   const trimmedHistory = (body.history ?? []).slice(-6);
   const messages = [
+    { role: "system" as const, content: SYSTEM_PROMPT },
     ...trimmedHistory.map((m) => ({
       role: m.role,
       content: m.content,
@@ -103,16 +114,40 @@ export async function POST(request: Request) {
   ];
 
   try {
-    const completion = await client.messages.create({
-      model: "claude-sonnet-4-5",
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages,
+    const res = await fetch(DEEPSEEK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "deepseek-chat",
+        messages,
+        max_tokens: 1024,
+        // Lower temperature → lebih konservatif, mengurangi halusinasi
+        // nomor hadits & klaim hukum yang tidak ada dasarnya.
+        temperature: 0.3,
+        stream: false,
+      }),
     });
 
-    const textBlock = completion.content.find((b) => b.type === "text");
-    const answer =
-      textBlock && textBlock.type === "text" ? textBlock.text : "";
+    if (!res.ok) {
+      const errBody = (await res.json().catch(() => null)) as
+        | DeepSeekResponse
+        | null;
+      // eslint-disable-next-line no-console
+      console.error("DeepSeek error:", res.status, errBody?.error?.message);
+      return NextResponse.json(
+        {
+          error:
+            "Maaf, ada kendala saat menghubungi asisten. Coba lagi sebentar.",
+        },
+        { status: 502 },
+      );
+    }
+
+    const data = (await res.json()) as DeepSeekResponse;
+    const answer = data.choices?.[0]?.message?.content?.trim();
 
     if (!answer) {
       return NextResponse.json(
