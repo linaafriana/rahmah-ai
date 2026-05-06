@@ -4,28 +4,11 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import clsx from "clsx";
-
-const storageKey = (slug: string) => `sakinah:belajar:${slug}`;
-
-function readSet(slug: string): Set<number> {
-  if (typeof window === "undefined") return new Set();
-  const raw = window.localStorage.getItem(storageKey(slug));
-  if (!raw) return new Set();
-  try {
-    const arr = JSON.parse(raw);
-    return new Set(Array.isArray(arr) ? arr : []);
-  } catch {
-    return new Set();
-  }
-}
-
-function writeSet(slug: string, set: Set<number>) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(
-    storageKey(slug),
-    JSON.stringify(Array.from(set)),
-  );
-}
+import {
+  PROGRESS_EVENT,
+  readChecked,
+  toggleChecked,
+} from "@/lib/belajarProgress";
 
 type Props = {
   slug: string;
@@ -36,22 +19,22 @@ export function BelajarStepCheck({ slug, index }: Props) {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const set = readSet(slug);
-    setChecked(set.has(index));
+    function refresh() {
+      setChecked(readChecked(slug).has(index));
+    }
+    refresh();
+    window.addEventListener(PROGRESS_EVENT, refresh);
+    return () => window.removeEventListener(PROGRESS_EVENT, refresh);
   }, [slug, index]);
 
-  function toggle() {
-    const set = readSet(slug);
-    if (set.has(index)) set.delete(index);
-    else set.add(index);
-    writeSet(slug, set);
-    setChecked(set.has(index));
+  function onClick() {
+    setChecked(toggleChecked(slug, index));
   }
 
   return (
     <button
       type="button"
-      onClick={toggle}
+      onClick={onClick}
       aria-pressed={checked}
       className="flex items-center gap-1.5 text-[11px] font-medium text-ink-soft hover:text-ink"
     >

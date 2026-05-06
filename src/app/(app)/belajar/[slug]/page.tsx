@@ -7,6 +7,7 @@ import { Blob } from "@/components/illustrations/Blob";
 import { BelajarStepCheck } from "@/components/belajar/StepCheck";
 import { HijaiyahLetter } from "@/components/belajar/HijaiyahLetter";
 import { BelajarVisitTracker } from "@/components/belajar/BelajarVisitTracker";
+import { TopicActions } from "@/components/belajar/TopicActions";
 import {
   findLearnTopic,
   nextTopicInCategory,
@@ -97,6 +98,10 @@ export default function BelajarTopicPage({
           </p>
         </div>
       </Card>
+
+      {!isHijaiyah && topic.items.length > 0 && (
+        <TopicActions slug={topic.slug} total={topic.items.length} />
+      )}
 
       {isHijaiyah ? (
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">

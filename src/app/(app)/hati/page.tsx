@@ -8,6 +8,7 @@ import {
   Heart,
   HeartHandshake,
   Baby,
+  MessageCircle,
   NotebookPen,
   Moon,
   Settings,
@@ -50,6 +51,13 @@ const DzikirTotalCard = dynamic(
 );
 
 const items = [
+  {
+    href: "/tanya",
+    title: "Tanya AI",
+    desc: "Pertanyaan agama dijawab dengan dalil shahih",
+    Icon: MessageCircle,
+    tone: "primary" as const,
+  },
   {
     href: "/butuhkan",
     title: "Bantuan untuk Hatimu",
