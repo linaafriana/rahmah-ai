@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowLeft, BookOpen, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { PositionTracker } from "@/components/quran/PositionTracker";
 import { VerseAudioButton } from "@/components/quran/VerseAudioButton";
@@ -12,6 +12,7 @@ import {
   getVerseAudios,
   getVersesByChapter,
 } from "@/lib/quran";
+import { getHintsFor } from "@/lib/quran-meta";
 
 type Params = { id: string };
 type SearchParams = { page?: string; reciter?: string };
@@ -151,6 +152,33 @@ export default async function SurahPage({
                   {translation}
                 </p>
               )}
+              {getHintsFor(v.verse_key).map((hint, hi) => (
+                <div
+                  key={hi}
+                  className={
+                    "mt-3 rounded-card border-l-4 px-3 py-2.5 text-xs leading-relaxed " +
+                    (hint.kind === "sajdah"
+                      ? "border-primary bg-primary-tint/60 text-ink"
+                      : "border-accent bg-accent-tint/60 text-ink")
+                  }
+                >
+                  <p className="flex items-center gap-1.5 text-[11px] font-bold text-ink">
+                    <Sparkles
+                      size={11}
+                      className={
+                        hint.kind === "sajdah"
+                          ? "text-primary"
+                          : "text-accent"
+                      }
+                    />
+                    {hint.title}
+                  </p>
+                  <p className="mt-1 text-ink-soft">{hint.body}</p>
+                  <p className="mt-1.5 text-[10px] text-ink-muted">
+                    📖 {hint.source}
+                  </p>
+                </div>
+              ))}
             </Card>
           );
         })}
