@@ -37,3 +37,22 @@ body {
     scrollbar-width: none;
   }
 }
+
+/* ─── Tahsin (tajwid) coloring ─────────────────────────────
+ * Selaras dengan warna mushaf KFGQPC (Mushaf Tajwid). Dipakai oleh
+ * <TajweedText> ketika user menyalakan toggle di /pengaturan.
+ * Default ink color tetap dari parent — di sini hanya override warna
+ * untuk huruf yang punya rule.
+ */
+.tajwid-h { color: #b48a78; }                 /* Hamzatul Wasl - coklat lembut */
+.tajwid-l { color: #999999; }                 /* Lam Syamsiyyah silent - abu */
+.tajwid-n { color: #d97706; }                 /* Madd Thabi'i - oranye */
+.tajwid-p { color: #16a34a; }                 /* Madd Munfasil - hijau */
+.tajwid-m { color: #ca8a04; }                 /* Madd Muttasil - kuning gelap */
+.tajwid-o { color: #dc2626; }                 /* Madd Lazim - merah */
+.tajwid-a { color: #ea580c; font-weight: 600; } /* Idgham - oranye-merah */
+.tajwid-f { color: #4ade80; }                 /* Ikhfa' - hijau muda */
+.tajwid-q { color: #dc2626; font-weight: 700; } /* Qalqalah - merah tebal */
+.tajwid-s { color: #999999; opacity: 0.55; }  /* Silent letters - redup */
+.tajwid-u { color: #ec4899; }                 /* Ikhfa' Syafawi - pink */
+

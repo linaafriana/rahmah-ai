@@ -6,6 +6,8 @@ import { PositionTracker } from "@/components/quran/PositionTracker";
 import { VerseAudioButton } from "@/components/quran/VerseAudioButton";
 import { ReciterPicker } from "@/components/quran/ReciterPicker";
 import { BookmarkButton } from "@/components/quran/BookmarkButton";
+import { TajweedText } from "@/components/quran/TajweedText";
+import { TajweedLegend } from "@/components/quran/TajweedLegend";
 import {
   DEFAULT_RECITER_ID,
   getChapter,
@@ -113,7 +115,10 @@ export default async function SurahPage({
         <p className="text-xs text-ink-muted">
           Ayat {startVerse}–{endVerse} dari {versesPage.total}
         </p>
-        <ReciterPicker />
+        <div className="flex items-center gap-2">
+          <TajweedLegend variant="link" />
+          <ReciterPicker />
+        </div>
       </div>
 
       <div className="space-y-3">
@@ -145,7 +150,11 @@ export default async function SurahPage({
                 className="mt-3 text-right font-arabic text-2xl leading-loose text-ink"
                 dir="rtl"
               >
-                {v.text_uthmani}
+                <TajweedText
+                  chapterId={chapter.id}
+                  verseKey={v.verse_key}
+                  uthmani={v.text_uthmani}
+                />
               </p>
               {translation && (
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
