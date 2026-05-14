@@ -5,6 +5,7 @@ import { MoodTracker } from "@/components/journal/MoodTracker";
 import { JournalEditor } from "@/components/journal/JournalEditor";
 import { JournalSkeleton } from "@/components/journal/JournalSkeleton";
 import { GratitudePromptCard } from "@/components/journal/GratitudePromptCard";
+import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
 import { useAuth } from "@/providers/AuthProvider";
 import { id as t } from "@/lib/i18n/id";
 
@@ -23,6 +24,13 @@ export default function JournalPage() {
         <h1 className="text-3xl font-bold text-ink">{t.journal.title}</h1>
         <p className="mt-1 text-sm text-ink-soft">{t.journal.prompt}</p>
       </header>
+      <SmartGuideCard
+        eyebrow="Satu kalimat cukup"
+        title="Mulai dari yang paling terasa"
+        body="Kalau bingung menulis, tulis satu rasa saja. Rahmah bisa membantumu mencari doa atau langkah kecil setelahnya."
+        href="/tanya"
+        actionLabel="Tanya Rahmah"
+      />
       <GratitudePromptCard />
       <MoodTracker />
       <JournalEditor />

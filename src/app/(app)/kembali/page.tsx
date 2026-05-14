@@ -41,7 +41,7 @@ export default function KembaliPage() {
       window.localStorage.setItem(NIAT_KEY(tomorrowKey()), value.trim());
     }
     setNiat(value.trim());
-    setStep(4);
+    setStep(3);
   }
 
   return (
@@ -90,6 +90,17 @@ export default function KembaliPage() {
             {t.kembali.subtitle}
           </motion.p>
         </header>
+
+        <div className="mb-5 flex gap-1.5" aria-label={`Langkah ${step} dari 4`}>
+          {[1, 2, 3, 4].map((n) => (
+            <div
+              key={n}
+              className={`h-1.5 flex-1 rounded-pill transition-colors ${
+                n <= step ? "bg-primary" : "bg-ink/10"
+              }`}
+            />
+          ))}
+        </div>
 
         <AnimatePresence mode="wait">
           {step === 1 && (

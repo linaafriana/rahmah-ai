@@ -15,6 +15,7 @@ import {
 import clsx from "clsx";
 import { Card } from "@/components/ui/Card";
 import { Tabs } from "@/components/ui/Tabs";
+import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
 import { id as t } from "@/lib/i18n/id";
 import { starterPath } from "@/data/seed-belajar";
 import {
@@ -160,6 +161,16 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
         <p className="mt-1 text-sm text-ink-soft">{t.belajar.subtitle}</p>
       </header>
 
+      {showStarter && (
+        <SmartGuideCard
+          eyebrow="Jangan pilih terlalu banyak"
+          title="Rahmah sarankan satu jalur dulu"
+          body="Kalau kamu baru mulai, ikuti Jalur Pemula. Kalau sedang mencari sesuatu, cukup ketik satu kata seperti wudhu, sabar, atau doa."
+          href="/belajar/pengantar-islam"
+          actionLabel="Mulai pertama"
+        />
+      )}
+
       <label className="relative block">
         <Search
           size={16}
@@ -195,8 +206,20 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
         <Card tone="cream" className="border border-ink/5">
           <p className="text-center text-sm text-ink-soft">
             Tidak ditemukan topik dengan kata &ldquo;{query.trim()}&rdquo;.
-            Coba kata lain.
+            Coba kata yang lebih umum seperti sholat, doa, sabar, atau wudhu.
           </p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            {["sholat", "doa", "sabar", "wudhu"].map((term) => (
+              <button
+                key={term}
+                type="button"
+                onClick={() => setQuery(term)}
+                className="rounded-pill bg-white px-3 py-1.5 text-xs font-semibold text-ink shadow-soft hover:text-primary"
+              >
+                {term}
+              </button>
+            ))}
+          </div>
         </Card>
       )}
 

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
+import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
 import { useAuth } from "@/providers/AuthProvider";
 import { id as t } from "@/lib/i18n/id";
 
@@ -137,6 +138,15 @@ export default function HatiPage() {
         <p className="mt-1 text-sm text-ink-soft">{t.hati.subtitle}</p>
       </header>
 
+      <SmartGuideCard
+        title="Pilih berdasarkan keadaanmu, bukan fitur"
+        body="Kalau sedang bingung, mulai dari Bantuan untuk Hatimu. Kalau butuh jawaban, Tanya Rahmah langsung."
+        href="/butuhkan"
+        actionLabel="Pilih kondisi"
+        secondaryHref="/tanya"
+        secondaryLabel="Tanya Rahmah"
+      />
+
       {/* ── Renungan harian + konteks waktu (pindah dari home) ── */}
       <section className="space-y-3">
         <DailyContentCard />
@@ -148,7 +158,7 @@ export default function HatiPage() {
       {/* ── Menu utama ──────────────────────────────────────── */}
       <section className="space-y-3">
         <p className="px-1 text-[11px] font-semibold uppercase tracking-widest text-ink-muted">
-          Menu
+          Pilihan saat dibutuhkan
         </p>
         {items.map(({ href, title, desc, Icon, tone }) => (
           <Link key={href} href={href} className="block">

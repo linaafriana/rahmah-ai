@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, Send, Sparkles, AlertCircle } from "lucide-react";
+import { Send, AlertCircle } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -25,6 +27,8 @@ export default function TanyaPage() {
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmClear, setConfirmClear] = useState(false);
+  const [lastQuestion, setLastQuestion] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Load chat history from localStorage on mount
@@ -54,6 +58,7 @@ export default function TanyaPage() {
     if (!trimmed || loading) return;
 
     const userMsg: ChatMessage = { role: "user", content: trimmed };
+    setLastQuestion(trimmed);
     const next = [...messages, userMsg];
     setMessages(next);
     setDraft("");
@@ -87,32 +92,23 @@ export default function TanyaPage() {
   }
 
   function clearChat() {
-    if (typeof window !== "undefined" && window.confirm("Hapus riwayat percakapan?")) {
-      setMessages([]);
-      setError(null);
-    }
+    setConfirmClear(true);
   }
 
   return (
     <div className="space-y-4">
-      <Link
-        href="/hati"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-soft hover:text-ink"
-      >
-        <ArrowLeft size={16} />
-        Hati
-      </Link>
+      <PageHeader
+        backHref="/hati"
+        backLabel="Hati"
+        title="Tanya Rahmah"
+        subtitle="Pendamping AI untuk pertanyaan agama, dengan batas aman dan rujukan yang jelas."
+      />
 
-      <header>
-        <div className="flex items-center gap-2">
-          <Sparkles size={18} className="text-primary" />
-          <h1 className="text-2xl font-bold text-ink">Tanya</h1>
-        </div>
-        <p className="mt-1 text-sm text-ink-soft">
-          Pendamping AI untuk pertanyaan agama. Hanya menjawab dengan dalil
-          shahih dari Qur&rsquo;an &amp; hadits.
-        </p>
-      </header>
+      <SmartGuideCard
+        eyebrow="Gunakan saat bingung"
+        title="Tanyakan satu hal yang paling dekat dulu"
+        body="Rahmah akan menjawab ringkas. Untuk perkara pribadi seperti talak, harta, atau sumpah, Rahmah akan mengarahkanmu ke ustadz/ustadzah."
+      />
 
       <Card tone="cream" className="border border-ink/5">
         <div className="flex items-start gap-2">
@@ -193,6 +189,15 @@ export default function TanyaPage() {
       {error && (
         <Card tone="cream" className="border border-rose-200">
           <p className="text-sm text-rose-500">{error}</p>
+          {lastQuestion && (
+            <button
+              type="button"
+              onClick={() => send(lastQuestion)}
+              className="mt-3 rounded-pill bg-white px-4 py-2 text-xs font-semibold text-ink shadow-soft hover:text-primary"
+            >
+              Coba kirim lagi
+            </button>
+          )}
         </Card>
       )}
 
@@ -231,6 +236,19 @@ export default function TanyaPage() {
           <Send size={14} />
         </button>
       </form>
+      <ConfirmDialog
+        open={confirmClear}
+        title="Hapus riwayat percakapan?"
+        body="Percakapan di perangkat ini akan dikosongkan. Kamu tetap bisa mulai lagi dari pertanyaan baru kapan saja."
+        confirmLabel="Hapus"
+        destructive
+        onCancel={() => setConfirmClear(false)}
+        onConfirm={() => {
+          setMessages([]);
+          setError(null);
+          setConfirmClear(false);
+        }}
+      />
     </div>
   );
 }

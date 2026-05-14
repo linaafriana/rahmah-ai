@@ -7,7 +7,7 @@ import clsx from "clsx";
 import {
   Home as HomeIcon,
   GraduationCap,
-  Sparkles,
+  MessageCircle,
   BookOpen,
   Heart,
 } from "lucide-react";
@@ -23,7 +23,7 @@ const items: NavItem[] = [
   { href: "/home", label: t.nav.home, Icon: HomeIcon },
   { href: "/belajar", label: t.nav.belajar, Icon: GraduationCap },
   { href: "/quran", label: t.nav.quran, Icon: BookOpen },
-  { href: "/dzikir", label: t.nav.dzikir, Icon: Sparkles },
+  { href: "/tanya", label: "Tanya", Icon: MessageCircle },
   { href: "/hati", label: t.nav.hati, Icon: Heart },
 ];
 
