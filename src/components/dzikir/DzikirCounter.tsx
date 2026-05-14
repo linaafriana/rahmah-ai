@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 import { RotateCcw } from "lucide-react";
 import { id as t } from "@/lib/i18n/id";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 type Ripple = { id: number; x: number; y: number };
 
@@ -23,6 +24,7 @@ export function DzikirCounter({
 }: DzikirCounterProps) {
   const [count, setCount] = useState(0);
   const [ripples, setRipples] = useState<Ripple[]>([]);
+  const [confirmReset, setConfirmReset] = useState(false);
   const idRef = useRef(0);
 
   function tap(e: React.MouseEvent<HTMLButtonElement>) {
@@ -41,9 +43,7 @@ export function DzikirCounter({
   }
 
   function reset() {
-    if (window.confirm(t.dzikir.resetConfirm)) {
-      setCount(0);
-    }
+    setConfirmReset(true);
   }
 
   const dim = size === "lg" ? "h-56 w-56" : "h-44 w-44";
@@ -106,6 +106,18 @@ export function DzikirCounter({
         <RotateCcw size={14} />
         {t.dzikir.reset}
       </button>
+      <ConfirmDialog
+        open={confirmReset}
+        title="Reset hitungan?"
+        body="Hitungan di layar akan kembali ke 0. Progres dzikir yang sudah tersimpan tidak akan dihapus."
+        confirmLabel="Reset"
+        destructive
+        onCancel={() => setConfirmReset(false)}
+        onConfirm={() => {
+          setCount(0);
+          setConfirmReset(false);
+        }}
+      />
     </div>
   );
 }

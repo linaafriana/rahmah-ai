@@ -100,6 +100,14 @@ export default function BookmarksPage() {
             <BookmarkCheck className="mx-auto mb-2 text-ink-muted" size={28} />
             Belum ada penanda. Buka surah dan ketuk ikon penanda di samping
             nomor ayat.
+            <div className="mt-4 flex justify-center">
+              <Link
+                href="/quran"
+                className="inline-flex min-h-10 items-center rounded-pill bg-primary px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-primary/90"
+              >
+                Buka Quran
+              </Link>
+            </div>
           </div>
         </Card>
       )}

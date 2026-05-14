@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowLeft, BookOpen, Check, Clock, Heart, LogOut, MapPin } from "lucide-react";
+import { BookOpen, Check, Clock, Heart, LogOut, MapPin } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { useAuth } from "@/providers/AuthProvider";
 import { TajweedLegend } from "@/components/quran/TajweedLegend";
 import { RECITERS, DEFAULT_RECITER_ID } from "@/lib/quran";
@@ -45,6 +47,7 @@ export default function PengaturanPage() {
   const [hasLocation, setHasLocation] = useState(false);
   const [haid, setHaid] = useState(false);
   const [tajwid, setTajwid] = useState(false);
+  const [confirmResetData, setConfirmResetData] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -103,12 +106,11 @@ export default function PengaturanPage() {
   }
 
   function resetData() {
-    if (
-      typeof window !== "undefined" &&
-      window.confirm(
-        "Hapus semua data lokal (niat, jurnal, kebiasaan, lokasi)? Tindakan tidak bisa dibatalkan.",
-      )
-    ) {
+    setConfirmResetData(true);
+  }
+
+  function confirmResetLocalData() {
+    if (typeof window !== "undefined") {
       const keys: string[] = [];
       for (let i = 0; i < window.localStorage.length; i++) {
         const key = window.localStorage.key(i);
@@ -128,20 +130,12 @@ export default function PengaturanPage() {
       transition={{ duration: 0.3 }}
       className="space-y-5"
     >
-      <Link
-        href="/hati"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-soft hover:text-ink"
-      >
-        <ArrowLeft size={16} />
-        Hati
-      </Link>
-
-      <header>
-        <h1 className="text-3xl font-bold text-ink">Pengaturan</h1>
-        <p className="mt-1 text-sm text-ink-soft">
-          Sesuaikan dengan kebutuhanmu
-        </p>
-      </header>
+      <PageHeader
+        backHref="/hati"
+        backLabel="Hati"
+        title="Pengaturan"
+        subtitle="Sesuaikan dengan kebutuhanmu"
+      />
 
       <Card tone="white">
         <h2 className="text-sm font-bold text-ink">Profil</h2>
@@ -406,6 +400,15 @@ export default function PengaturanPage() {
           Keluar
         </button>
       </Card>
+      <ConfirmDialog
+        open={confirmResetData}
+        title="Hapus semua data lokal?"
+        body="Niat, jurnal, kebiasaan, lokasi, penanda lokal, dan preferensi di perangkat ini akan dihapus. Data yang sudah tersimpan di akun tidak ikut dihapus."
+        confirmLabel="Hapus data"
+        destructive
+        onCancel={() => setConfirmResetData(false)}
+        onConfirm={confirmResetLocalData}
+      />
     </motion.div>
   );
 }

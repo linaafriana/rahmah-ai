@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 import clsx from "clsx";
 import { forwardRef } from "react";
 
@@ -40,11 +40,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) {
+    const reduceMotion = useReducedMotion();
+
     return (
       <motion.button
         ref={ref}
-        whileTap={{ scale: 0.96 }}
-        whileHover={{ scale: 1.01 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+        whileHover={reduceMotion ? undefined : { scale: 1.01 }}
         transition={{ type: "spring", stiffness: 400, damping: 22 }}
         className={clsx(
           base,
