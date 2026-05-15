@@ -91,21 +91,32 @@ export default function BookmarksPage() {
       </header>
 
       {loading && (
-        <p className="py-6 text-center text-sm text-ink-muted">Memuat…</p>
+        <div role="status" aria-live="polite" className="py-6 text-center">
+          <p className="text-sm text-ink-muted">Memuat penanda...</p>
+        </div>
       )}
 
       {!loading && items.length === 0 && (
         <Card tone="cream" className="border border-ink/5">
           <div className="text-center text-sm text-ink-soft">
             <BookmarkCheck className="mx-auto mb-2 text-ink-muted" size={28} />
-            Belum ada penanda. Buka surah dan ketuk ikon penanda di samping
-            nomor ayat.
-            <div className="mt-4 flex justify-center">
+            <p className="font-semibold text-ink">Belum ada penanda.</p>
+            <p className="mt-1 leading-relaxed">
+              Rahmah sarankan mulai dari satu ayat pendek dulu. Saat ada ayat
+              yang ingin kamu simpan, ketuk ikon penanda di samping nomor ayat.
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
               <Link
-                href="/quran"
+                href="/quran/1"
                 className="inline-flex min-h-10 items-center rounded-pill bg-primary px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-primary/90"
               >
-                Buka Quran
+                Mulai Al-Fatihah
+              </Link>
+              <Link
+                href="/quran"
+                className="inline-flex min-h-10 items-center rounded-pill bg-white px-4 py-2 text-sm font-semibold text-ink shadow-soft hover:text-primary"
+              >
+                Lihat daftar surah
               </Link>
             </div>
           </div>
