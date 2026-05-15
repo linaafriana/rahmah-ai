@@ -174,6 +174,7 @@ export default function JadwalPage() {
                     />
                     <input
                       type="search"
+                      enterKeyHint="search"
                       value={cityQuery}
                       onChange={(e) => setCityQuery(e.target.value)}
                       placeholder="Contoh: Bandung"
@@ -216,15 +217,70 @@ export default function JadwalPage() {
       )}
 
       {coords && loading && (
-        <div className="space-y-3">
+        <div className="space-y-3" role="status" aria-live="polite">
+          <p className="sr-only">
+            Memuat jadwal sholat dan arah kiblat untuk lokasimu.
+          </p>
           <Skeleton className="h-32 w-full" rounded="card-lg" />
           <Skeleton className="h-44 w-full" rounded="card-lg" />
         </div>
       )}
 
       {error && !loading && (
-        <Card tone="cream">
-          <p className="text-sm text-rose-500">{error}</p>
+        <Card tone="cream" className="border border-rose-200">
+          <p className="text-sm font-semibold text-rose-500">{error}</p>
+          <p className="mt-1 text-xs leading-relaxed text-ink-soft">
+            Kamu bisa coba ulangi pemuatan, ganti lokasi, atau pilih kota
+            manual jika GPS sedang tidak stabil.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                if (!coords) return;
+                setData(null);
+                setQibla(null);
+                setError(null);
+                setLoading(true);
+                void Promise.all([
+                  getTimings(coords.latitude, coords.longitude, {
+                    method: readUserMethod(),
+                    tune: readUserTune(),
+                  }),
+                  getQibla(coords.latitude, coords.longitude),
+                  reverseGeocode(coords.latitude, coords.longitude),
+                ])
+                  .then(([t, q, g]) => {
+                    if (!t) {
+                      setError("Tidak dapat memuat jadwal sholat. Coba lagi nanti.");
+                      return;
+                    }
+                    setData(t);
+                    if (q) setQibla(q);
+                    if (g) setGeo(g);
+                  })
+                  .catch(() => {
+                    setError("Tidak dapat memuat jadwal sholat. Coba lagi nanti.");
+                  })
+                  .finally(() => setLoading(false));
+              }}
+              className="rounded-pill bg-white px-4 py-2 text-xs font-semibold text-ink shadow-soft hover:text-primary"
+            >
+              Coba lagi
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                reset();
+                setData(null);
+                setQibla(null);
+                setError(null);
+              }}
+              className="rounded-pill bg-white px-4 py-2 text-xs font-semibold text-ink shadow-soft hover:text-primary"
+            >
+              Ganti lokasi
+            </button>
+          </div>
         </Card>
       )}
 
