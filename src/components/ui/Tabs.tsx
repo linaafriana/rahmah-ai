@@ -21,6 +21,15 @@ export function Tabs<T extends string>({
   onChange,
   className,
 }: TabsProps<T>) {
+  function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    e.preventDefault();
+    const current = items.findIndex((item) => item.value === value);
+    const delta = e.key === "ArrowRight" ? 1 : -1;
+    const next = (current + delta + items.length) % items.length;
+    onChange(items[next].value);
+  }
+
   return (
     <div
       className={clsx(
@@ -28,6 +37,7 @@ export function Tabs<T extends string>({
         className,
       )}
       role="tablist"
+      onKeyDown={onKeyDown}
     >
       {items.map((item) => {
         const active = item.value === value;
@@ -37,6 +47,7 @@ export function Tabs<T extends string>({
             type="button"
             role="tab"
             aria-selected={active}
+            tabIndex={active ? 0 : -1}
             onClick={() => onChange(item.value)}
             className={clsx(
               "relative flex-1 rounded-pill px-3 py-2 text-sm font-semibold transition-colors",

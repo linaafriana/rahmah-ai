@@ -273,6 +273,7 @@ export default function HomePage() {
           actionLabel={guide.actionLabel}
           secondaryHref="/belajar"
           secondaryLabel="Lihat pilihan"
+          alwaysShow
         />
       </motion.div>
 

@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { QUIET_MODE_EVENT, readQuietMode } from "@/lib/preferences";
 
 type SmartGuideCardProps = {
   eyebrow?: string;
@@ -12,6 +14,7 @@ type SmartGuideCardProps = {
   actionLabel?: string;
   secondaryHref?: string;
   secondaryLabel?: string;
+  alwaysShow?: boolean;
 };
 
 export function SmartGuideCard({
@@ -22,7 +25,25 @@ export function SmartGuideCard({
   actionLabel = "Mulai",
   secondaryHref,
   secondaryLabel,
+  alwaysShow,
 }: SmartGuideCardProps) {
+  const [quiet, setQuiet] = useState(false);
+
+  useEffect(() => {
+    function refresh() {
+      setQuiet(readQuietMode());
+    }
+    refresh();
+    window.addEventListener(QUIET_MODE_EVENT, refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener(QUIET_MODE_EVENT, refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
+
+  if (quiet && !alwaysShow) return null;
+
   return (
     <Card tone="cream" className="border border-primary/15">
       <div className="flex items-start gap-3">

@@ -13,6 +13,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { TajweedLegend } from "@/components/quran/TajweedLegend";
 import { RECITERS, DEFAULT_RECITER_ID } from "@/lib/quran";
 import { isHaidActive, setHaidActive } from "@/lib/haid";
+import { readQuietMode, writeQuietMode } from "@/lib/preferences";
 import { readTajweedEnabled, writeTajweedEnabled } from "@/lib/tajweed";
 import {
   DEFAULT_METHOD,
@@ -47,6 +48,7 @@ export default function PengaturanPage() {
   const [hasLocation, setHasLocation] = useState(false);
   const [haid, setHaid] = useState(false);
   const [tajwid, setTajwid] = useState(false);
+  const [quietMode, setQuietMode] = useState(false);
   const [confirmResetData, setConfirmResetData] = useState(false);
 
   useEffect(() => {
@@ -59,6 +61,7 @@ export default function PengaturanPage() {
     setTune(readUserTune());
     setHaid(isHaidActive());
     setTajwid(readTajweedEnabled());
+    setQuietMode(readQuietMode());
   }, [user]);
 
   function toggleHaid() {
@@ -71,6 +74,12 @@ export default function PengaturanPage() {
     const next = !tajwid;
     setTajwid(next);
     writeTajweedEnabled(next);
+  }
+
+  function toggleQuietMode() {
+    const next = !quietMode;
+    setQuietMode(next);
+    writeQuietMode(next);
   }
 
   function save() {
@@ -154,6 +163,35 @@ export default function PengaturanPage() {
         {user?.email && (
           <p className="mt-2 text-[11px] text-ink-muted">{user.email}</p>
         )}
+      </Card>
+
+      <Card tone="white">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1">
+            <h2 className="text-sm font-bold text-ink">Mode tenang</h2>
+            <p className="mt-1 text-[11px] leading-relaxed text-ink-soft">
+              Kurangi kartu saran tambahan. Beranda tetap menampilkan satu
+              langkah utama, tapi halaman lain terasa lebih sunyi.
+            </p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={quietMode}
+            onClick={toggleQuietMode}
+            className={
+              "relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-pill transition-colors " +
+              (quietMode ? "bg-primary" : "bg-ink/15")
+            }
+          >
+            <span
+              className={
+                "inline-block h-5 w-5 transform rounded-full bg-white shadow-soft transition-transform " +
+                (quietMode ? "translate-x-6" : "translate-x-1")
+              }
+            />
+          </button>
+        </div>
       </Card>
 
       <Card tone="white">

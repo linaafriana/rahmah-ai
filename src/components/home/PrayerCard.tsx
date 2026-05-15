@@ -78,13 +78,19 @@ export function PrayerCard({ value, onChange }: Props) {
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-primary-tint text-primary">
             <MapPin size={16} />
           </div>
-          <div className="flex-1">
+          <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold text-ink">
               Aktifkan lokasi
             </p>
             <p className="text-[11px] text-ink-soft">
               Untuk melihat waktu sholat harian
             </p>
+            <Link
+              href="/jadwal"
+              className="mt-1 inline-flex text-[11px] font-semibold text-primary hover:underline"
+            >
+              Pilih kota manual
+            </Link>
           </div>
           <button
             type="button"

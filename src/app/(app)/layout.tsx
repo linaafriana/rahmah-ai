@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BottomNav } from "@/components/ui/BottomNav";
+import { OfflineBanner } from "@/components/ui/OfflineBanner";
 import { useAuth } from "@/providers/AuthProvider";
 
 export default function AppLayout({
@@ -31,6 +32,7 @@ export default function AppLayout({
 
   return (
     <div className="relative min-h-dvh bg-background">
+      <OfflineBanner />
       <div className="mx-auto max-w-md px-5 pb-28 pt-6">{children}</div>
       <BottomNav />
     </div>
