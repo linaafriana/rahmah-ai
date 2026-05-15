@@ -87,10 +87,13 @@ const tabItems: { value: TabValue; label: string }[] = [
 export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
   const [tab, setTab] = useState<TabValue>("all");
   const [query, setQuery] = useState("");
+  const [focus, setFocus] = useState<string | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
   // Tick on every progress/bookmark change so memoized lists recompute.
   const [progressTick, setProgressTick] = useState(0);
 
   useEffect(() => {
+    setFocus(window.localStorage.getItem("sakinah:focus"));
     function bump() {
       setProgressTick((n) => n + 1);
     }
@@ -173,6 +176,25 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
   }, [topics]);
 
   const showStarter = tab === "all" && !query.trim();
+  const reduceCatalogue = showStarter && !showAdvanced;
+  const displayedLevels = reduceCatalogue
+    ? (["pemula"] as LearnLevel[])
+    : levelOrder;
+  const hiddenCount = reduceCatalogue
+    ? grouped.menengah.length + grouped.lanjutan.length
+    : 0;
+
+  const focusTopic = useMemo(() => {
+    const firstByFocus: Record<string, string> = {
+      sholat: "sholat-fardhu",
+      quran: "adab-al-quran",
+      tahsin: "hijaiyah",
+      hati: "niat-ikhlas",
+      belum: "pengantar-islam",
+    };
+    const slug = focus ? firstByFocus[focus] : null;
+    return slug ? topics.find((topic) => topic.slug === slug) : null;
+  }, [focus, topics]);
 
   return (
     <div className="space-y-5">
@@ -184,10 +206,24 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
       {showStarter && (
         <SmartGuideCard
           eyebrow="Jangan pilih terlalu banyak"
-          title="Rahmah sarankan satu jalur dulu"
-          body="Kalau kamu baru mulai, ikuti Jalur Pemula. Kalau sedang mencari sesuatu, cukup ketik satu kata seperti wudhu, sabar, atau doa."
-          href="/belajar/pengantar-islam"
-          actionLabel="Mulai pertama"
+          title={
+            focusTopic
+              ? `Mulai dari ${focusTopic.title}`
+              : "Rahmah sarankan satu jalur dulu"
+          }
+          body={
+            focusTopic
+              ? "Ini dipilih dari fokus onboardingmu. Selesaikan satu topik dulu sebelum membuka banyak pilihan."
+              : "Kalau kamu baru mulai, ikuti Jalur Pemula. Kalau sedang mencari sesuatu, cukup ketik satu kata seperti wudhu, sabar, atau doa."
+          }
+          href={
+            focusTopic
+              ? `/belajar/${focusTopic.slug}`
+              : "/belajar/pengantar-islam"
+          }
+          actionLabel={focusTopic ? "Buka rekomendasi" : "Mulai pertama"}
+          secondaryHref="/tanya"
+          secondaryLabel="Tanya Rahmah"
         />
       )}
 
@@ -199,8 +235,12 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
         <input
           type="text"
           inputMode="search"
+          enterKeyHint="search"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setShowAdvanced(true);
+          }}
           placeholder="Cari topik — wudhu, sabar, hijaiyah…"
           className="w-full rounded-pill border border-ink/5 bg-white py-2.5 pl-10 pr-10 text-sm text-ink shadow-soft outline-none placeholder:text-ink-muted focus:ring-2 focus:ring-primary/30"
         />
@@ -218,9 +258,20 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
 
       <div className="-mx-1 overflow-x-auto pb-1 no-scrollbar">
         <div className="min-w-max px-1">
-          <Tabs items={tabItems} value={tab} onChange={setTab} />
+          <Tabs
+            items={tabItems}
+            value={tab}
+            onChange={(next) => {
+              setTab(next);
+              if (next !== "all") setShowAdvanced(true);
+            }}
+          />
         </div>
       </div>
+
+      <p className="sr-only" aria-live="polite">
+        {totalResults} topik ditemukan.
+      </p>
 
       {query.trim() && totalResults === 0 && (
         <Card tone="cream" className="border border-ink/5">
@@ -338,7 +389,7 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
           transition={{ duration: 0.25 }}
           className="space-y-6"
         >
-          {levelOrder.map((level) => {
+          {displayedLevels.map((level) => {
             const list = grouped[level];
             if (list.length === 0) return null;
             return (
@@ -436,6 +487,24 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
               </section>
             );
           })}
+          {hiddenCount > 0 && (
+            <Card tone="white" className="border border-primary/10 text-center">
+              <p className="text-sm font-semibold text-ink">
+                {hiddenCount} topik menengah dan lanjutan disembunyikan dulu.
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-ink-soft">
+                Rahmah menahan pilihan berat agar halaman ini tidak
+                membanjiri kamu saat baru mulai.
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowAdvanced(true)}
+                className="mt-3 rounded-pill bg-primary px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                Tampilkan semua topik
+              </button>
+            </Card>
+          )}
         </motion.div>
       </AnimatePresence>
     </div>
