@@ -17,17 +17,12 @@ export default function GlobalError({
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center px-6 py-10 text-center">
-      <div className="mb-6 text-6xl">🤲</div>
+      <div className="mb-6 text-6xl">!</div>
       <h1 className="text-2xl font-bold text-ink">Ada yang tidak beres</h1>
       <p className="mt-2 text-sm text-ink-soft">
-        Innā lillāhi wa innā ilaihi rāji&rsquo;ūn. Coba lagi sebentar — jika
-        masih terjadi, kami sudah mencatatnya.
+        Coba lagi sebentar. Kalau masih terjadi, kembali ke Beranda dulu agar
+        perjalananmu tidak berhenti di sini.
       </p>
-      {error.digest && (
-        <p className="mt-2 text-[11px] text-ink-muted">
-          Kode: {error.digest}
-        </p>
-      )}
       <div className="mt-8 flex gap-2">
         <button
           type="button"

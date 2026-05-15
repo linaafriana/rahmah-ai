@@ -22,6 +22,17 @@ body {
   min-height: 100dvh;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -55,4 +66,3 @@ body {
 .tajwid-q { color: #dc2626; font-weight: 700; } /* Qalqalah - merah tebal */
 .tajwid-s { color: #999999; opacity: 0.55; }  /* Silent letters - redup */
 .tajwid-u { color: #ec4899; }                 /* Ikhfa' Syafawi - pink */
-

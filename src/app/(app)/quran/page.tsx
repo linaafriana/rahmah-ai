@@ -3,16 +3,53 @@ import { Sparkles, Headphones, Bookmark } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { SurahList } from "@/components/quran/SurahList";
 import { ContinueReadingCard } from "@/components/quran/ContinueReadingCard";
+import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
 import { id as t } from "@/lib/i18n/id";
 import { getChapters, type Chapter } from "@/lib/quran";
 
 const fallbackChapters: Chapter[] = [
-  { id: 1, name_simple: "Al-Fatihah", name_arabic: "ٱلْفَاتِحَة", verses_count: 7, revelation_place: "makkah" },
-  { id: 2, name_simple: "Al-Baqarah", name_arabic: "ٱلْبَقَرَة", verses_count: 286, revelation_place: "madinah" },
-  { id: 18, name_simple: "Al-Kahf", name_arabic: "ٱلْكَهْف", verses_count: 110, revelation_place: "makkah" },
-  { id: 36, name_simple: "Yasin", name_arabic: "يس", verses_count: 83, revelation_place: "makkah" },
-  { id: 67, name_simple: "Al-Mulk", name_arabic: "ٱلْمُلْك", verses_count: 30, revelation_place: "makkah" },
-  { id: 112, name_simple: "Al-Ikhlas", name_arabic: "ٱلْإِخْلَاص", verses_count: 4, revelation_place: "makkah" },
+  {
+    id: 1,
+    name_simple: "Al-Fatihah",
+    name_arabic: "الفاتحة",
+    verses_count: 7,
+    revelation_place: "makkah",
+  },
+  {
+    id: 2,
+    name_simple: "Al-Baqarah",
+    name_arabic: "البقرة",
+    verses_count: 286,
+    revelation_place: "madinah",
+  },
+  {
+    id: 18,
+    name_simple: "Al-Kahf",
+    name_arabic: "الكهف",
+    verses_count: 110,
+    revelation_place: "makkah",
+  },
+  {
+    id: 36,
+    name_simple: "Yasin",
+    name_arabic: "يس",
+    verses_count: 83,
+    revelation_place: "makkah",
+  },
+  {
+    id: 67,
+    name_simple: "Al-Mulk",
+    name_arabic: "الملك",
+    verses_count: 30,
+    revelation_place: "makkah",
+  },
+  {
+    id: 112,
+    name_simple: "Al-Ikhlas",
+    name_arabic: "الإخلاص",
+    verses_count: 4,
+    revelation_place: "makkah",
+  },
 ];
 
 async function loadChapters(): Promise<Chapter[]> {
@@ -31,7 +68,7 @@ export default async function QuranPage() {
         <h1 className="text-3xl font-bold text-ink">{t.quran.title}</h1>
         <Link
           href="/quran/bookmarks"
-          className="inline-flex items-center gap-1.5 rounded-pill bg-white px-3 py-1.5 text-xs font-semibold text-ink shadow-soft hover:text-primary"
+          className="inline-flex min-h-10 items-center gap-1.5 rounded-pill bg-white px-3 py-1.5 text-xs font-semibold text-ink shadow-soft hover:text-primary"
         >
           <Bookmark size={14} />
           Penanda
@@ -39,6 +76,14 @@ export default async function QuranPage() {
       </header>
 
       <ContinueReadingCard />
+
+      <SmartGuideCard
+        eyebrow="Baca ringan"
+        title="Tidak perlu mulai dari banyak ayat"
+        body="Mulai dari posisi terakhir, Al-Fatihah, atau satu surah pendek. Rahmah akan menyimpan posisimu."
+        href="/quran/1"
+        actionLabel="Buka Al-Fatihah"
+      />
 
       <section>
         <h2 className="mb-3 text-sm font-bold text-ink">

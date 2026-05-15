@@ -5,7 +5,6 @@ import Link from "next/link";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft,
   Compass,
   MapPin,
   RefreshCw,
@@ -14,6 +13,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { QiblaCompass } from "@/components/jadwal/QiblaCompass";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { useLocation } from "@/hooks/useLocation";
 import { reverseGeocode, type ReverseGeoResult } from "@/lib/geo";
 import {
@@ -75,34 +75,18 @@ export default function JadwalPage() {
 
   return (
     <div className="space-y-5">
-      <Link
-        href="/hati"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-soft hover:text-ink"
-      >
-        <ArrowLeft size={16} />
-        Hati
-      </Link>
-
-      <header>
-        <h1 className="text-3xl font-bold text-ink">Jadwal & Kiblat</h1>
-        {data?.meta.source?.kind === "equran" ? (
-          <p className="mt-1 inline-flex items-center gap-1 text-sm text-ink-soft">
-            <MapPin size={13} className="text-primary" />
-            <span>
-              Berdasarkan jadwal Kemenag untuk {data.meta.source.kabkota}
-            </span>
-          </p>
-        ) : geo ? (
-          <p className="mt-1 inline-flex items-center gap-1 text-sm text-ink-soft">
-            <MapPin size={13} className="text-primary" />
-            <span>Berdasarkan lokasimu di {geo.display}</span>
-          </p>
-        ) : (
-          <p className="mt-1 text-sm text-ink-soft">
-            Waktu sholat dan arah kiblat untuk lokasimu
-          </p>
-        )}
-      </header>
+      <PageHeader
+        backHref="/hati"
+        backLabel="Hati"
+        title="Jadwal & Kiblat"
+        subtitle={
+          data?.meta.source?.kind === "equran"
+            ? `Berdasarkan jadwal Kemenag untuk ${data.meta.source.kabkota}`
+            : geo
+              ? `Berdasarkan lokasimu di ${geo.display}`
+              : "Waktu sholat dan arah kiblat untuk lokasimu"
+        }
+      />
 
       {!coords && (
         <Card tone="cream" className="border border-ink/5">
@@ -119,9 +103,11 @@ export default function JadwalPage() {
                 kiblat. Tidak disimpan ke server.
               </p>
               {status === "denied" && (
-                <p className="mt-2 text-xs text-rose-500">
-                  Izin lokasi ditolak. Aktifkan dari pengaturan browser.
-                </p>
+                <div className="mt-2 rounded-card bg-white px-3 py-2 text-xs leading-relaxed text-rose-500">
+                  Izin lokasi ditolak. Buka pengaturan browser, izinkan lokasi
+                  untuk Rahmah, lalu kembali ke halaman ini dan coba lagi.
+                  Kamu juga bisa menghapus lokasi tersimpan dari Pengaturan.
+                </div>
               )}
               {status === "unsupported" && (
                 <p className="mt-2 text-xs text-rose-500">

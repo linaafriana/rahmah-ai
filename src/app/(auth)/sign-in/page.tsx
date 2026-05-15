@@ -68,7 +68,7 @@ export default function SignInPage() {
       } else {
         await signIn(email, password);
       }
-      router.push("/home");
+      router.push(consumePendingPath());
     } catch (err) {
       console.error(err);
       setError(authErrorMessage(err));
@@ -82,13 +82,21 @@ export default function SignInPage() {
     setBusy(true);
     try {
       await signInWithGoogle();
-      router.push("/home");
+      router.push(consumePendingPath());
     } catch (err) {
       console.error(err);
       setError(authErrorMessage(err));
     } finally {
       setBusy(false);
     }
+  }
+
+  function consumePendingPath() {
+    if (typeof window === "undefined") return "/home";
+    const pending = window.localStorage.getItem("sakinah:pendingPath");
+    if (!pending || !pending.startsWith("/")) return "/home";
+    window.localStorage.removeItem("sakinah:pendingPath");
+    return pending;
   }
 
   return (

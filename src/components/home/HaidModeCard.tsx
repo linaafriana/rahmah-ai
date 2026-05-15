@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Heart, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { setHaidActive } from "@/lib/haid";
 
 /**
@@ -14,11 +16,11 @@ import { setHaidActive } from "@/lib/haid";
  * tetap terbuka lebar.
  */
 export function HaidModeCard() {
+  const [confirmEnd, setConfirmEnd] = useState(false);
+
   function handleEnd() {
     if (typeof window === "undefined") return;
-    if (window.confirm("Tandai haid sudah selesai?")) {
-      setHaidActive(false);
-    }
+    setConfirmEnd(true);
   }
 
   return (
@@ -105,6 +107,17 @@ export function HaidModeCard() {
           </Link>
         </motion.div>
       </div>
+      <ConfirmDialog
+        open={confirmEnd}
+        title="Tandai haid selesai?"
+        body="Tracker sholat akan muncul lagi di Beranda. Kamu bisa mengaktifkan mode haid kembali dari Pengaturan kapan saja."
+        confirmLabel="Ya, selesai"
+        onCancel={() => setConfirmEnd(false)}
+        onConfirm={() => {
+          setHaidActive(false);
+          setConfirmEnd(false);
+        }}
+      />
     </Card>
   );
 }

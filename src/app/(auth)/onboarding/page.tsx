@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -92,9 +91,18 @@ export default function OnboardingPage() {
       window.localStorage.setItem("sakinah:onboarded", "true");
       if (name.trim())
         window.localStorage.setItem("sakinah:displayName", name.trim());
-      // Note: previously also wrote `sakinah:focus` here, but no other
-      // surface ever read it back. Removed to keep localStorage clean
-      // (and easier to clear on sign-out per the audit-fixes pass).
+      if (focus) window.localStorage.setItem("sakinah:focus", focus);
+    }
+    router.push("/sign-in");
+  }
+
+  function startRecommendedTopic(slug: string) {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("sakinah:onboarded", "true");
+      window.localStorage.setItem("sakinah:pendingPath", `/belajar/${slug}`);
+      if (name.trim())
+        window.localStorage.setItem("sakinah:displayName", name.trim());
+      if (focus) window.localStorage.setItem("sakinah:focus", focus);
     }
     router.push("/sign-in");
   }
@@ -303,10 +311,11 @@ export default function OnboardingPage() {
               </div>
               <div className="space-y-2.5">
                 {recommendations[focus].map((rec, i) => (
-                  <Link
+                  <button
                     key={rec.slug}
-                    href={`/belajar/${rec.slug}`}
-                    className="block"
+                    type="button"
+                    onClick={() => startRecommendedTopic(rec.slug)}
+                    className="block w-full text-left"
                   >
                     <Card tone="white" padded={false} className="px-4 py-3">
                       <div className="flex items-center gap-3">
@@ -320,7 +329,7 @@ export default function OnboardingPage() {
                         <ChevronRight size={16} className="text-ink-muted" />
                       </div>
                     </Card>
-                  </Link>
+                  </button>
                 ))}
               </div>
               <Button size="lg" fullWidth onClick={finish}>
