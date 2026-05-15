@@ -16,7 +16,7 @@ import { InstallPrompt } from "@/components/home/InstallPrompt";
 import { MockModeBanner } from "@/components/home/MockModeBanner";
 import { StarterPathCard } from "@/components/home/StarterPathCard";
 import { HomeSkeleton } from "@/components/home/HomeSkeleton";
-import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
+import { DailyGuidanceHub } from "@/components/home/DailyGuidanceHub";
 import { useAuth } from "@/providers/AuthProvider";
 import {
   loadPrayers,
@@ -59,46 +59,10 @@ const fallbackPosition: QuranPosition = {
   totalAyahs: 110,
 };
 
-const focusGuide: Record<
-  string,
-  { title: string; body: string; href: string; actionLabel: string }
-> = {
-  sholat: {
-    title: "Mulai dari satu sholat berikutnya",
-    body: "Rahmah akan bantu kamu fokus pada langkah paling dekat, bukan semua target sekaligus.",
-    href: "/jadwal",
-    actionLabel: "Lihat jadwal",
-  },
-  quran: {
-    title: "Buka bacaan yang ringan dulu",
-    body: "Mulai dari ayat pendek atau lanjutkan posisi terakhir. Satu ayat tetap berarti.",
-    href: "/quran",
-    actionLabel: "Buka Quran",
-  },
-  tahsin: {
-    title: "Latih bacaan pelan-pelan",
-    body: "Mulai dari huruf atau tajwid dasar. Tidak perlu lompat ke materi berat.",
-    href: "/belajar/hijaiyah",
-    actionLabel: "Mulai latihan",
-  },
-  hati: {
-    title: "Rawat hati dengan satu langkah kecil",
-    body: "Kalau sedang berat, mulai dari doa, jurnal, atau tanya Rahmah.",
-    href: "/butuhkan",
-    actionLabel: "Pilih kondisi",
-  },
-  belum: {
-    title: "Rahmah pilihkan langkah pertama",
-    body: "Mulai dari dasar Islam dengan urutan yang ringan dan jelas.",
-    href: "/belajar/pengantar-islam",
-    actionLabel: "Mulai dari dasar",
-  },
-};
-
 export default function HomePage() {
   const { user } = useAuth();
   const [progress, setProgress] = useState<PrayerProgress>(emptyProgress);
-  const [, setPosition] = useState<QuranPosition>(fallbackPosition);
+  const [position, setPosition] = useState<QuranPosition>(fallbackPosition);
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [focus, setFocus] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
@@ -201,33 +165,6 @@ export default function HomePage() {
   }, [user, dateKey]);
 
   const name = displayName ?? user?.name ?? "Sahabat";
-  const guide =
-    haid
-      ? {
-          title: "Hari ini tetap bisa dekat",
-          body: "Mode haid aktif. Rahmah menyarankan dzikir, doa, atau belajar ringan dulu.",
-          href: "/hati",
-          actionLabel: "Lihat amalan",
-        }
-      : progress.fajr ||
-          progress.dhuhr ||
-          progress.asr ||
-          progress.maghrib ||
-          progress.isha
-        ? {
-            title: "Lanjutkan yang sudah dimulai",
-            body: "Bagus, kamu sudah bergerak. Selesaikan satu langkah berikutnya saja.",
-            href: "/quran",
-            actionLabel: "Lanjut ringan",
-          }
-        : focus && focusGuide[focus]
-          ? focusGuide[focus]
-          : {
-              title: "Mulai dari satu hal kecil",
-              body: "Tidak perlu membuka semua fitur. Pilih satu langkah yang paling mudah hari ini.",
-              href: "/tanya",
-              actionLabel: "Tanya Rahmah",
-            };
 
   function onPrayerChange(next: PrayerProgress) {
     setProgress(next);
@@ -266,14 +203,11 @@ export default function HomePage() {
       </motion.div>
 
       <motion.div variants={item}>
-        <SmartGuideCard
-          title={guide.title}
-          body={guide.body}
-          href={guide.href}
-          actionLabel={guide.actionLabel}
-          secondaryHref="/belajar"
-          secondaryLabel="Lihat pilihan"
-          alwaysShow
+        <DailyGuidanceHub
+          progress={progress}
+          focus={focus}
+          haid={haid}
+          quranPosition={position}
         />
       </motion.div>
 

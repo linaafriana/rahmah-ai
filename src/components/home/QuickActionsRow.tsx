@@ -52,6 +52,7 @@ export function QuickActionsRow() {
         <motion.div key={href} whileTap={{ scale: 0.94 }}>
           <Link
             href={href}
+            aria-label={`Buka ${label}`}
             className="flex flex-col items-center gap-1.5 rounded-card bg-white p-3 shadow-soft hover:shadow-soft-lg"
           >
             <span

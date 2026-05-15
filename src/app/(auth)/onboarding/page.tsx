@@ -91,7 +91,13 @@ export default function OnboardingPage() {
       window.localStorage.setItem("sakinah:onboarded", "true");
       if (name.trim())
         window.localStorage.setItem("sakinah:displayName", name.trim());
-      if (focus) window.localStorage.setItem("sakinah:focus", focus);
+      if (focus) {
+        window.localStorage.setItem("sakinah:focus", focus);
+        window.localStorage.setItem(
+          "sakinah:guidanceProfile",
+          JSON.stringify({ focus, createdAt: Date.now(), pace: "gentle" }),
+        );
+      }
     }
     router.push("/sign-in");
   }
@@ -102,7 +108,13 @@ export default function OnboardingPage() {
       window.localStorage.setItem("sakinah:pendingPath", `/belajar/${slug}`);
       if (name.trim())
         window.localStorage.setItem("sakinah:displayName", name.trim());
-      if (focus) window.localStorage.setItem("sakinah:focus", focus);
+      if (focus) {
+        window.localStorage.setItem("sakinah:focus", focus);
+        window.localStorage.setItem(
+          "sakinah:guidanceProfile",
+          JSON.stringify({ focus, createdAt: Date.now(), pace: "gentle" }),
+        );
+      }
     }
     router.push("/sign-in");
   }

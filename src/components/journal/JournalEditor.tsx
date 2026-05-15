@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
@@ -85,6 +86,15 @@ export function JournalEditor() {
     schedule(text, next);
   }
 
+  const emptyPrompt =
+    mood === "sad" || mood === "tearful" || mood === "tired"
+      ? "Hari ini terasa berat karena..."
+      : mood === "angry"
+        ? "Yang membuatku perlu jeda adalah..."
+        : mood === "joyful" || mood === "loved"
+          ? "Hal yang ingin kusyukuri hari ini adalah..."
+          : "Hari ini aku ingin jujur tentang...";
+
   const lowerText = text.toLowerCase();
   const insight =
     text.trim().length < 24
@@ -129,7 +139,7 @@ export function JournalEditor() {
       <Card tone="cream" className="border border-ink/5">
         <div className="mb-2 flex items-center justify-between">
           <h3 className="text-sm font-bold text-ink">{t.journal.prompt}</h3>
-          <span className="text-[11px] text-ink-muted">
+          <span className="text-[11px] text-ink-muted" aria-live="polite">
             {status === "saving"
               ? t.journal.saving
               : status === "saved"
@@ -144,6 +154,20 @@ export function JournalEditor() {
           rows={8}
           className="w-full resize-none rounded-card bg-white px-4 py-3 text-sm leading-relaxed text-ink outline-none placeholder:text-ink-muted focus:ring-2 focus:ring-primary/40"
         />
+        {text.trim().length === 0 && (
+          <div className="mt-3 rounded-card bg-white/70 px-3 py-2">
+            <p className="text-[11px] font-semibold text-ink">
+              Rahmah bantu mulai:
+            </p>
+            <button
+              type="button"
+              onClick={() => onTextChange(emptyPrompt)}
+              className="mt-1 text-left text-xs leading-relaxed text-primary hover:underline"
+            >
+              {emptyPrompt}
+            </button>
+          </div>
+        )}
         <div className="mt-3 flex justify-end">
           <Button variant="primary" onClick={() => persist(text, mood)}>
             {t.journal.save}
@@ -158,6 +182,23 @@ export function JournalEditor() {
           href={insight.href}
           actionLabel={insight.actionLabel}
         />
+      )}
+      {text.trim().length >= 24 && (
+        <Card tone="white" className="border border-primary/10">
+          <p className="text-xs font-bold uppercase tracking-widest text-primary">
+            Langkah setelah refleksi
+          </p>
+          <p className="mt-1 text-sm leading-relaxed text-ink-soft">
+            Rahmah bisa mengubah isi jurnal ini menjadi doa, niat kecil, atau
+            pertanyaan yang lebih terarah.
+          </p>
+          <Link
+            href="/tanya"
+            className="mt-3 inline-flex min-h-10 items-center rounded-pill bg-primary px-4 py-2 text-sm font-semibold text-white shadow-soft hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            Minta arahan Rahmah
+          </Link>
+        </Card>
       )}
     </div>
   );

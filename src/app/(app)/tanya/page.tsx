@@ -23,6 +23,14 @@ const STARTER_PROMPTS = [
   "Doa apa yang dianjurkan saat sedih?",
 ];
 
+const FOCUS_PROMPTS: Record<string, string> = {
+  sholat: "Aku ingin lebih konsisten sholat. Langkah kecil apa yang paling baik hari ini?",
+  quran: "Aku ingin dekat dengan Al-Quran. Bacaan ringan apa yang cocok untuk mulai hari ini?",
+  tahsin: "Aku ingin memperbaiki bacaan. Latihan tahsin apa yang paling dasar untuk hari ini?",
+  hati: "Hatiku sedang butuh diarahkan. Amalan ringan apa yang bisa kulakukan hari ini?",
+  belum: "Aku masih bingung harus mulai dari mana. Tolong pilihkan langkah Islam paling dasar untukku.",
+};
+
 const STORAGE_KEY = "sakinah:tanya:history";
 
 export default function TanyaPage() {
@@ -33,17 +41,21 @@ export default function TanyaPage() {
   const [error, setError] = useState<string | null>(null);
   const [confirmClear, setConfirmClear] = useState(false);
   const [lastQuestion, setLastQuestion] = useState<string | null>(null);
+  const [focusPrompt, setFocusPrompt] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Load chat history from localStorage on mount
   useEffect(() => {
     if (typeof window === "undefined") return;
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    try {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) setMessages(parsed);
-    } catch {}
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) setMessages(parsed);
+      } catch {}
+    }
+    const focus = window.localStorage.getItem("sakinah:focus");
+    if (focus && FOCUS_PROMPTS[focus]) setFocusPrompt(FOCUS_PROMPTS[focus]);
   }, []);
 
   useEffect(() => {
@@ -151,8 +163,17 @@ export default function TanyaPage() {
       {messages.length === 0 ? (
         <Card tone="white">
           <p className="text-xs font-bold uppercase tracking-widest text-ink-soft">
-            Coba mulai dari sini
+            Rahmah bisa mulaikan
           </p>
+          {focusPrompt && (
+            <button
+              type="button"
+              onClick={() => send(focusPrompt)}
+              className="mt-3 w-full rounded-card border border-primary/20 bg-primary-tint px-3 py-3 text-left text-sm font-semibold leading-relaxed text-ink hover:bg-primary-tint/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              {focusPrompt}
+            </button>
+          )}
           <div className="mt-3 grid gap-2">
             {STARTER_PROMPTS.map((prompt) => (
               <button
@@ -196,7 +217,11 @@ export default function TanyaPage() {
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="rounded-card-lg bg-white px-4 py-3 shadow-soft">
+              <div
+                role="status"
+                aria-live="polite"
+                className="rounded-card-lg bg-white px-4 py-3 shadow-soft"
+              >
                 <span className="inline-flex items-center gap-1.5 text-sm text-ink-muted">
                   <span className="flex gap-1">
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
@@ -210,6 +235,29 @@ export default function TanyaPage() {
           )}
           <div ref={scrollRef} />
         </div>
+      )}
+
+      {messages.length > 0 && !loading && (
+        <Card tone="white" className="border border-primary/10">
+          <p className="text-xs font-bold uppercase tracking-widest text-primary">
+            Tanya lanjutan yang berguna
+          </p>
+          <div className="mt-2 grid gap-2">
+            {[
+              "Ringkas jawabannya menjadi 3 langkah praktis.",
+              "Apa satu tindakan paling ringan yang bisa kulakukan hari ini?",
+            ].map((prompt) => (
+              <button
+                key={prompt}
+                type="button"
+                onClick={() => send(prompt)}
+                className="rounded-card bg-background px-3 py-2.5 text-left text-sm text-ink hover:bg-primary-tint/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+        </Card>
       )}
 
       {error && (
@@ -246,6 +294,7 @@ export default function TanyaPage() {
       >
         <input
           type="text"
+          enterKeyHint="send"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Tanyakan sesuatu…"
