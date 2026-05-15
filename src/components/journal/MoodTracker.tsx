@@ -122,7 +122,7 @@ export function MoodTracker() {
               className="flex flex-1 flex-col items-center gap-2"
             >
               <span className="text-base">
-                {mood ? moodEmoji[mood] : "·"}
+                {mood ? moodEmoji[mood] : "-"}
               </span>
               <motion.div
                 initial={{ height: 0 }}

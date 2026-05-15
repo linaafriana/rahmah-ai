@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -24,6 +25,15 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  useEffect(() => {
+    if (!open) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") onCancel();
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, onCancel]);
+
   if (!open) return null;
 
   return (

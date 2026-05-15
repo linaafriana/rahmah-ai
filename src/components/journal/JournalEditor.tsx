@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
 import { MoodPicker } from "@/components/journal/MoodPicker";
 import { useAuth } from "@/providers/AuthProvider";
 import {
@@ -84,6 +85,44 @@ export function JournalEditor() {
     schedule(text, next);
   }
 
+  const lowerText = text.toLowerCase();
+  const insight =
+    text.trim().length < 24
+      ? null
+      : lowerText.includes("sedih") ||
+          lowerText.includes("berat") ||
+          lowerText.includes("hampa")
+        ? {
+            title: "Rahmah sarankan langkah yang lembut",
+            body: "Tulisanmu terasa berat. Kamu bisa mulai dari doa sesuai kondisi hati, lalu ambil satu niat kecil untuk besok.",
+            href: "/butuhkan",
+            actionLabel: "Cari doa",
+          }
+        : lowerText.includes("marah") ||
+            lowerText.includes("kesal") ||
+            lowerText.includes("sabar")
+          ? {
+              title: "Arahkan rasa ini jadi latihan sabar",
+              body: "Tidak perlu langsung selesai. Ambil jeda, tulis niat kecil, lalu pelajari satu topik tentang akhlak atau sabar.",
+              href: "/belajar/akhlak-harian",
+              actionLabel: "Buka akhlak",
+            }
+          : lowerText.includes("syukur") ||
+              lowerText.includes("alhamdulillah") ||
+              mood === "loved"
+            ? {
+                title: "Simpan rasa syukur ini sebagai bekal",
+                body: "Kamu bisa menutup jurnal dengan satu niat sederhana agar rasa syukur berubah jadi tindakan besok.",
+                href: "/muhasabah",
+                actionLabel: "Niatkan besok",
+              }
+            : {
+                title: "Ubah refleksi jadi satu langkah",
+                body: "Pilih satu tindakan kecil dari tulisanmu. Rahmah akan membantumu menjaga langkahnya tetap ringan.",
+                href: "/tanya",
+                actionLabel: "Minta arahan",
+              };
+
   return (
     <div className="space-y-4">
       <MoodPicker value={mood} onChange={onMoodChange} />
@@ -111,6 +150,15 @@ export function JournalEditor() {
           </Button>
         </div>
       </Card>
+      {insight && (
+        <SmartGuideCard
+          eyebrow="Dari jurnalmu"
+          title={insight.title}
+          body={insight.body}
+          href={insight.href}
+          actionLabel={insight.actionLabel}
+        />
+      )}
     </div>
   );
 }
