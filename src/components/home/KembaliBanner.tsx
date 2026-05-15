@@ -85,7 +85,8 @@ export function KembaliBanner() {
               e.preventDefault();
               dismiss();
             }}
-            className="absolute right-2 top-2 text-[10px] text-ink-muted hover:text-ink"
+            aria-label="Tutup pengingat kembali"
+            className="absolute right-2 top-2 rounded-pill bg-white/60 px-2 py-1 text-[10px] font-semibold text-ink-muted hover:text-ink"
           >
             tutup
           </button>

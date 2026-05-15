@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { Bookmark, BookmarkCheck, Check, RotateCcw } from "lucide-react";
 import {
   PROGRESS_EVENT,
@@ -57,7 +58,7 @@ export function TopicActions({ slug, total }: Props) {
               {checked}/{total}
             </span>
             <span className="text-[11px] font-medium text-ink-muted">
-              · {ratioPct}% selesai
+              {ratioPct}% selesai
             </span>
             {done && (
               <span className="ml-1 inline-flex items-center gap-0.5 rounded-pill bg-primary-tint px-2 py-0.5 text-[10px] font-bold text-primary">
@@ -112,6 +113,15 @@ export function TopicActions({ slug, total }: Props) {
           </button>
         )}
       </div>
+      {done && (
+        <div className="mt-3 rounded-card bg-primary-tint px-3 py-2 text-xs leading-relaxed text-ink-soft">
+          Rahmah: topik ini sudah selesai. Baca ulang ringkasannya besok, atau
+          lanjutkan rekomendasi berikutnya di bawah.
+          <Link href="/tanya" className="ml-1 font-semibold text-primary">
+            Tanya jika masih ada yang membingungkan.
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

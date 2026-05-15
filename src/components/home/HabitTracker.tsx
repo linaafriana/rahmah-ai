@@ -108,6 +108,10 @@ export function HabitTracker() {
     [presets, custom],
   );
 
+  const completedToday = habits.filter(
+    (habit) => !!state[habit.id]?.[todayKey],
+  ).length;
+
   function toggleToday(habitId: string) {
     setState((prev) => {
       const next: HabitState = { ...prev };
@@ -151,7 +155,9 @@ export function HabitTracker() {
           <h3 className="text-sm font-bold text-ink">{t.habit.title}</h3>
           {!editing && (
             <p className="mt-0.5 text-[11px] text-ink-muted">
-              {t.habit.subtitle}
+              {completedToday > 0
+                ? `${completedToday}/${habits.length} kebiasaan disentuh hari ini`
+                : t.habit.subtitle}
             </p>
           )}
         </div>
@@ -189,6 +195,7 @@ export function HabitTracker() {
                   type="button"
                   onClick={() => !editing && toggleToday(h.id)}
                   disabled={editing}
+                  aria-pressed={todayDone}
                   className={clsx(
                     "flex flex-1 items-center gap-2 text-left",
                     editing && "cursor-default",
@@ -208,9 +215,8 @@ export function HabitTracker() {
                         : "bg-background text-ink-muted",
                       editing && "opacity-40",
                     )}
-                    aria-pressed={todayDone}
                   >
-                    {todayDone ? "✓" : "·"}
+                    {todayDone ? <Check size={11} strokeWidth={3} /> : ""}
                   </motion.span>
                   <span className="text-sm font-medium text-ink">
                     {h.label}
@@ -322,7 +328,7 @@ export function HabitTracker() {
 
       {!editing && (
         <p className="mt-4 text-[11px] italic text-ink-soft">
-          Tidak ada streak yang putus. Setiap usaha tetap dicatat 🤍
+          Tidak ada streak yang putus. Pilih satu saja kalau hari ini berat.
         </p>
       )}
     </Card>

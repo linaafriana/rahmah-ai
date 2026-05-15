@@ -137,7 +137,7 @@ export function InstallPrompt() {
                   Pasang Rahmah di layar utama
                 </p>
                 <p className="mt-0.5 text-[11px] leading-relaxed text-ink-soft">
-                  Tap ikon Bagikan di Safari → pilih{" "}
+                  Tap ikon Bagikan di Safari, lalu pilih{" "}
                   <span className="font-semibold text-ink">
                     Tambahkan ke Layar Utama
                   </span>

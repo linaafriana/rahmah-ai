@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -25,8 +25,11 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
+
   useEffect(() => {
     if (!open) return;
+    cancelRef.current?.focus();
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") onCancel();
     }
@@ -56,7 +59,13 @@ export function ConfirmDialog({
           </div>
         </div>
         <div className="mt-5 grid grid-cols-2 gap-2">
-          <Button type="button" variant="soft" onClick={onCancel} fullWidth>
+          <Button
+            ref={cancelRef}
+            type="button"
+            variant="soft"
+            onClick={onCancel}
+            fullWidth
+          >
             {cancelLabel}
           </Button>
           <button

@@ -32,8 +32,16 @@ export default function AppLayout({
 
   return (
     <div className="relative min-h-dvh bg-background">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-pill focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary focus:shadow-soft-lg"
+      >
+        Lewati ke konten utama
+      </a>
       <OfflineBanner />
-      <div className="mx-auto max-w-md px-5 pb-28 pt-6">{children}</div>
+      <main id="main-content" className="mx-auto max-w-md px-5 pb-28 pt-6">
+        {children}
+      </main>
       <BottomNav />
     </div>
   );

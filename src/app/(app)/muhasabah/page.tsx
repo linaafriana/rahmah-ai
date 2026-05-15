@@ -83,6 +83,10 @@ export default function MuhasabahPage() {
     setStep((s) => (s < 5 ? ((s + 1) as typeof s) : s));
   }
 
+  function backStep() {
+    setStep((s) => (s > 1 ? ((s - 1) as typeof s) : s));
+  }
+
   return (
     <main className="relative min-h-dvh overflow-hidden bg-gradient-to-b from-background via-background to-secondary-soft/40">
       <Blob
@@ -124,6 +128,17 @@ export default function MuhasabahPage() {
             />
           ))}
         </div>
+
+        {step > 1 && step < 5 && (
+          <button
+            type="button"
+            onClick={backStep}
+            className="mb-4 inline-flex items-center gap-1.5 rounded-pill bg-white px-3 py-1.5 text-xs font-semibold text-ink-soft shadow-soft hover:text-ink"
+          >
+            <ArrowLeft size={13} />
+            Kembali satu langkah
+          </button>
+        )}
 
         <AnimatePresence mode="wait">
           {step === 1 && (
