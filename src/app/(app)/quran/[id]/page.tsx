@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, BookOpen, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
 import { PositionTracker } from "@/components/quran/PositionTracker";
 import { VerseAudioButton } from "@/components/quran/VerseAudioButton";
 import { ReciterPicker } from "@/components/quran/ReciterPicker";
@@ -110,6 +111,14 @@ export default async function SurahPage({
           {chapter.name_arabic}
         </p>
       </Card>
+
+      <SmartGuideCard
+        eyebrow="Baca dengan bantuan"
+        title="Kalau ada ayat yang belum dipahami, tanyakan pelan-pelan"
+        body="Rahmah bisa membantu menjelaskan konteks umum dan akan mengingatkanmu untuk bertanya ke ustadz/ustadzah saat masuk perkara hukum pribadi."
+        href="/tanya"
+        actionLabel="Tanya tentang ayat"
+      />
 
       <div className="flex items-center justify-between gap-3">
         <p className="text-xs text-ink-muted">

@@ -4,17 +4,17 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
+  Baby,
   ChevronRight,
+  Compass,
   Heart,
   HeartHandshake,
-  Baby,
+  LogOut,
   MessageCircle,
-  NotebookPen,
   Moon,
+  NotebookPen,
   Settings,
   Sparkles,
-  Compass,
-  LogOut,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
@@ -22,8 +22,6 @@ import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
 import { useAuth } from "@/providers/AuthProvider";
 import { id as t } from "@/lib/i18n/id";
 
-// Pulled off the home page (which now focuses on tasks). Lazy-loaded so
-// the menu items render instantly even on slow connections.
 const DailyContentCard = dynamic(
   () =>
     import("@/components/home/DailyContentCard").then(
@@ -51,22 +49,27 @@ const DzikirTotalCard = dynamic(
   { ssr: false },
 );
 
+const groups = ["Butuh bantuan", "Refleksi", "Ibadah", "Keluarga & akun"];
+
 const items = [
   {
+    group: "Butuh bantuan",
     href: "/tanya",
     title: "Tanya AI",
-    desc: "Pertanyaan agama dijawab dengan dalil shahih",
+    desc: "Pertanyaan agama dijawab dengan rujukan",
     Icon: MessageCircle,
     tone: "primary" as const,
   },
   {
+    group: "Butuh bantuan",
     href: "/butuhkan",
     title: "Bantuan untuk Hatimu",
-    desc: "Topik & doa sesuai apa yang kamu rasakan",
+    desc: "Topik dan doa sesuai yang kamu rasakan",
     Icon: HeartHandshake,
     tone: "secondary" as const,
   },
   {
+    group: "Refleksi",
     href: "/muhasabah",
     title: "Muhasabah Malam",
     desc: "4 pertanyaan singkat sebelum tidur",
@@ -74,6 +77,7 @@ const items = [
     tone: "primary" as const,
   },
   {
+    group: "Refleksi",
     href: "/kembali",
     title: "Aku ingin kembali",
     desc: "Mulai lagi pelan-pelan dari istighfar",
@@ -81,6 +85,7 @@ const items = [
     tone: "accent" as const,
   },
   {
+    group: "Refleksi",
     href: "/journal",
     title: "Jurnal",
     desc: "Tulis apa yang ada di hatimu",
@@ -88,6 +93,7 @@ const items = [
     tone: "white" as const,
   },
   {
+    group: "Ibadah",
     href: "/taubat",
     title: "Taubat Mode",
     desc: "Ruang tenang untuk istighfar",
@@ -95,6 +101,7 @@ const items = [
     tone: "secondary" as const,
   },
   {
+    group: "Ibadah",
     href: "/jadwal",
     title: "Jadwal & Kiblat",
     desc: "Waktu sholat dan arah kiblat",
@@ -102,6 +109,7 @@ const items = [
     tone: "accent" as const,
   },
   {
+    group: "Keluarga & akun",
     href: "/parenting",
     title: "Parenting",
     desc: "Tumbuh bersama si kecil",
@@ -109,6 +117,7 @@ const items = [
     tone: "primary" as const,
   },
   {
+    group: "Keluarga & akun",
     href: "/pengaturan",
     title: "Pengaturan",
     desc: "Profil, qari favorit, lokasi",
@@ -147,7 +156,6 @@ export default function HatiPage() {
         secondaryLabel="Tanya Rahmah"
       />
 
-      {/* ── Renungan harian + konteks waktu (pindah dari home) ── */}
       <section className="space-y-3">
         <DailyContentCard />
         <TimeSpotlightCard />
@@ -155,26 +163,33 @@ export default function HatiPage() {
         <DzikirTotalCard />
       </section>
 
-      {/* ── Menu utama ──────────────────────────────────────── */}
-      <section className="space-y-3">
-        <p className="px-1 text-[11px] font-semibold uppercase tracking-widest text-ink-muted">
-          Pilihan saat dibutuhkan
-        </p>
-        {items.map(({ href, title, desc, Icon, tone }) => (
-          <Link key={href} href={href} className="block">
-            <Card tone={tone}>
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-card bg-white text-ink">
-                  <Icon size={22} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-base font-bold text-ink">{title}</h3>
-                  <p className="mt-0.5 text-xs text-ink-soft">{desc}</p>
-                </div>
-                <ChevronRight size={20} className="text-ink-muted" />
-              </div>
-            </Card>
-          </Link>
+      <section className="space-y-5">
+        {groups.map((group) => (
+          <div key={group} className="space-y-2.5">
+            <p className="px-1 text-[11px] font-semibold uppercase tracking-widest text-ink-muted">
+              {group}
+            </p>
+            {items
+              .filter((item) => item.group === group)
+              .map(({ href, title, desc, Icon, tone }) => (
+                <Link key={href} href={href} className="block">
+                  <Card tone={tone}>
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-card bg-white text-ink">
+                        <Icon size={22} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-base font-bold text-ink">
+                          {title}
+                        </h3>
+                        <p className="mt-0.5 text-xs text-ink-soft">{desc}</p>
+                      </div>
+                      <ChevronRight size={20} className="text-ink-muted" />
+                    </div>
+                  </Card>
+                </Link>
+              ))}
+          </div>
         ))}
       </section>
 

@@ -196,3 +196,29 @@ export async function saveQuranPosition(uid: string, pos: QuranPosition) {
     { merge: true },
   );
 }
+
+// --- Tanya history ---
+
+export type TanyaMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+export async function loadTanyaHistory(uid: string): Promise<TanyaMessage[]> {
+  const db = requireDb();
+  if (!db) return [];
+  const snap = await getDoc(doc(db, "tanyaHistories", uid));
+  if (!snap.exists()) return [];
+  const data = snap.data() as { messages?: TanyaMessage[] };
+  return Array.isArray(data.messages) ? data.messages : [];
+}
+
+export async function saveTanyaHistory(uid: string, messages: TanyaMessage[]) {
+  const db = requireDb();
+  if (!db) return;
+  await setDoc(
+    doc(db, "tanyaHistories", uid),
+    { messages: messages.slice(-40), updatedAt: serverTimestamp() },
+    { merge: true },
+  );
+}

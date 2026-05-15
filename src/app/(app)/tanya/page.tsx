@@ -7,11 +7,14 @@ import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SmartGuideCard } from "@/components/ui/SmartGuideCard";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useAuth } from "@/providers/AuthProvider";
+import {
+  loadTanyaHistory,
+  saveTanyaHistory,
+  type TanyaMessage,
+} from "@/lib/firebase/firestore";
 
-type ChatMessage = {
-  role: "user" | "assistant";
-  content: string;
-};
+type ChatMessage = TanyaMessage;
 
 const STARTER_PROMPTS = [
   "Apa keutamaan sholat Subuh tepat waktu?",
@@ -23,6 +26,7 @@ const STARTER_PROMPTS = [
 const STORAGE_KEY = "sakinah:tanya:history";
 
 export default function TanyaPage() {
+  const { user } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,11 +46,33 @@ export default function TanyaPage() {
     } catch {}
   }, []);
 
+  useEffect(() => {
+    if (!user) return;
+    let alive = true;
+    void loadTanyaHistory(user.uid)
+      .then((remote) => {
+        if (!alive || remote.length === 0) return;
+        setMessages(remote);
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(remote));
+        }
+      })
+      .catch(() => {
+        // Local history remains available if sync is unavailable.
+      });
+    return () => {
+      alive = false;
+    };
+  }, [user]);
+
   // Persist on change
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-  }, [messages]);
+    if (user && messages.length > 0) {
+      void saveTanyaHistory(user.uid, messages).catch(() => {});
+    }
+  }, [messages, user]);
 
   // Auto-scroll to bottom on new message
   useEffect(() => {

@@ -82,5 +82,11 @@ export function useLocation() {
     setStatus("idle");
   }
 
-  return { coords, status, request, reset };
+  function setManual(next: Coords) {
+    setCoords(next);
+    writeCached(next);
+    setStatus("granted");
+  }
+
+  return { coords, status, request, reset, setManual };
 }

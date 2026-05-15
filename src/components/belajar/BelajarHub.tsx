@@ -52,6 +52,25 @@ const levelChip: Record<LearnLevel, string> = {
   lanjutan: "bg-secondary text-ink",
 };
 
+const queryAliases: Record<string, string[]> = {
+  sedih: ["sabar", "hati", "doa", "tawakkal"],
+  cemas: ["sabar", "tawakkal", "doa", "hati"],
+  takut: ["tawakkal", "doa", "iman"],
+  dosa: ["taubat", "istighfar", "tobat"],
+  balik: ["taubat", "istighfar", "kembali"],
+  sholat: ["salat", "shalat", "wudhu", "khusyu"],
+  salat: ["sholat", "shalat", "wudhu", "khusyu"],
+  quran: ["alquran", "al-qur'an", "tajwid", "tahsin"],
+  anak: ["parenting", "doa", "sholat"],
+};
+
+function queryTerms(query: string) {
+  const base = query.trim().toLowerCase();
+  if (!base) return [];
+  const aliases = queryAliases[base] ?? [];
+  return [base, ...aliases];
+}
+
 const tabItems: { value: TabValue; label: string }[] = [
   { value: "all", label: t.belajar.categories.all },
   { value: "saved", label: "Disimpan" },
@@ -120,6 +139,7 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
       filtered = topics.filter((top) => top.category === tab);
     }
     if (q) {
+      const terms = queryTerms(q);
       filtered = filtered.filter((topic) => {
         const haystack = [
           topic.title,
@@ -129,7 +149,7 @@ export function BelajarHub({ topics }: { topics: LearnTopic[] }) {
         ]
           .join(" ")
           .toLowerCase();
-        return haystack.includes(q);
+        return terms.some((term) => haystack.includes(term));
       });
     }
     const groups: Record<LearnLevel, LearnTopic[]> = {

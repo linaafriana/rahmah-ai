@@ -6,8 +6,10 @@ import clsx from "clsx";
 import { motion } from "framer-motion";
 import {
   Compass,
+  Loader2,
   MapPin,
   RefreshCw,
+  Search,
 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -15,7 +17,12 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { QiblaCompass } from "@/components/jadwal/QiblaCompass";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useLocation } from "@/hooks/useLocation";
-import { reverseGeocode, type ReverseGeoResult } from "@/lib/geo";
+import {
+  reverseGeocode,
+  searchPlaces,
+  type PlaceSearchResult,
+  type ReverseGeoResult,
+} from "@/lib/geo";
 import {
   cleanTime,
   formatCountdown,
@@ -32,12 +39,16 @@ import {
 } from "@/lib/prayer";
 
 export default function JadwalPage() {
-  const { coords, status, request, reset } = useLocation();
+  const { coords, status, request, reset, setManual } = useLocation();
   const [data, setData] = useState<TimingsResponse | null>(null);
   const [qibla, setQibla] = useState<QiblaResponse | null>(null);
   const [geo, setGeo] = useState<ReverseGeoResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cityQuery, setCityQuery] = useState("");
+  const [cityResults, setCityResults] = useState<PlaceSearchResult[]>([]);
+  const [citySearching, setCitySearching] = useState(false);
+  const [cityError, setCityError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!coords) return;
@@ -72,6 +83,33 @@ export default function JadwalPage() {
       alive = false;
     };
   }, [coords]);
+
+  async function findCity(e: React.FormEvent) {
+    e.preventDefault();
+    const q = cityQuery.trim();
+    if (q.length < 3) {
+      setCityError("Tulis minimal 3 huruf nama kota.");
+      return;
+    }
+    setCitySearching(true);
+    setCityError(null);
+    try {
+      const results = await searchPlaces(q);
+      setCityResults(results);
+      if (results.length === 0) {
+        setCityError("Kota belum ditemukan. Coba tulis nama yang lebih lengkap.");
+      }
+    } finally {
+      setCitySearching(false);
+    }
+  }
+
+  function chooseCity(place: PlaceSearchResult) {
+    setManual({ latitude: place.latitude, longitude: place.longitude });
+    setGeo(place);
+    setCityResults([]);
+    setCityQuery(place.display);
+  }
 
   return (
     <div className="space-y-5">
@@ -124,6 +162,54 @@ export default function JadwalPage() {
                   ? "Mendeteksi…"
                   : "Aktifkan lokasi"}
               </Button>
+              <div className="mt-4 rounded-card bg-white/70 p-3">
+                <p className="text-xs font-semibold text-ink">
+                  Atau pilih kota secara manual
+                </p>
+                <form onSubmit={findCity} className="mt-2 flex gap-2">
+                  <label className="relative min-w-0 flex-1">
+                    <Search
+                      size={14}
+                      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
+                    />
+                    <input
+                      type="search"
+                      value={cityQuery}
+                      onChange={(e) => setCityQuery(e.target.value)}
+                      placeholder="Contoh: Bandung"
+                      className="w-full rounded-pill border border-ink/10 bg-background py-2 pl-9 pr-3 text-sm text-ink outline-none focus:border-primary"
+                    />
+                  </label>
+                  <button
+                    type="submit"
+                    disabled={citySearching}
+                    className="inline-flex h-10 min-w-10 items-center justify-center rounded-pill bg-primary px-4 text-sm font-semibold text-white shadow-soft disabled:opacity-50"
+                  >
+                    {citySearching ? (
+                      <Loader2 size={15} className="animate-spin" />
+                    ) : (
+                      "Cari"
+                    )}
+                  </button>
+                </form>
+                {cityError && (
+                  <p className="mt-2 text-xs text-rose-500">{cityError}</p>
+                )}
+                {cityResults.length > 0 && (
+                  <div className="mt-2 space-y-1.5">
+                    {cityResults.map((place) => (
+                      <button
+                        key={`${place.latitude},${place.longitude}`}
+                        type="button"
+                        onClick={() => chooseCity(place)}
+                        className="block w-full rounded-card bg-background px-3 py-2 text-left text-xs text-ink hover:bg-primary-tint"
+                      >
+                        {place.display}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </Card>

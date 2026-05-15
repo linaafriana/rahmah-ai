@@ -1,34 +1,28 @@
 rules_version = '2';
 
-// Rahmah — Firestore security rules.
-// Each user can read & write only their own data.
-// Public/editorial collections (reflections, lessons) are read-only for everyone.
+// Rahmah Firestore security rules.
+// Each user can read and write only their own data.
+// Public/editorial collections are read-only for everyone.
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helpers
     function signedIn() {
       return request.auth != null;
     }
+
     function isOwner(uid) {
       return signedIn() && request.auth.uid == uid;
     }
 
-    // ─── Per-user collections ────────────────────────────────
     match /users/{uid} {
       allow read, write: if isOwner(uid);
     }
 
-    // userProgress/{uid}/prayers/{date}
-    // userProgress/{uid}/meta/quranPosition
     match /userProgress/{uid}/{document=**} {
       allow read, write: if isOwner(uid);
     }
 
-    // journals/{uid}/entries/{date}
-    // Hard cap on text to defend against a runaway autosave bug or a
-    // malicious client racking up storage on its own quota.
     match /journals/{uid}/entries/{entryId} {
       allow read: if isOwner(uid);
       allow create, update: if isOwner(uid)
@@ -37,18 +31,22 @@ service cloud.firestore {
       allow delete: if isOwner(uid);
     }
 
-    // dzikirLogs/{uid}/daily/{date}
     match /dzikirLogs/{uid}/{document=**} {
       allow read, write: if isOwner(uid);
     }
 
-    // bookmarks/{uid}/verses/{verseKey}
     match /bookmarks/{uid}/{document=**} {
       allow read, write: if isOwner(uid);
     }
 
-    // ─── Editorial/public collections (read-only) ────────────
-    // Editors must use Firebase Admin SDK or Console to write.
+    match /tanyaHistories/{uid} {
+      allow read: if isOwner(uid);
+      allow create, update: if isOwner(uid)
+        && request.resource.data.messages is list
+        && request.resource.data.messages.size() <= 40;
+      allow delete: if isOwner(uid);
+    }
+
     match /reflections/{date} {
       allow read: if true;
       allow write: if false;
@@ -59,7 +57,6 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Default deny everything else
     match /{document=**} {
       allow read, write: if false;
     }
