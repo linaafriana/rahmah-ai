@@ -4,7 +4,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { BookOpen, Check, Clock, Heart, LogOut, MapPin } from "lucide-react";
+import {
+  BookOpen,
+  Check,
+  Clock,
+  Heart,
+  LogOut,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
@@ -131,6 +140,26 @@ export default function PengaturanPage() {
   }
 
   const tuneActive = Object.values(tune).some((v) => v !== 0);
+  const recommendedSetting = !name.trim()
+    ? {
+        title: "Lengkapi nama panggilan",
+        body: "Rahmah bisa menyapa dan memberi arahan yang terasa lebih personal.",
+        href: "#profil",
+        label: "Isi profil",
+      }
+    : !hasLocation
+      ? {
+          title: "Aktifkan lokasi sholat",
+          body: "Jadwal sholat akan terasa lebih terpercaya kalau lokasi perangkat sudah disimpan.",
+          href: "/jadwal",
+          label: "Atur lokasi",
+        }
+      : {
+          title: "Pengaturan penting sudah aman",
+          body: "Rahmah memakai preferensi ini untuk menyesuaikan panduan tanpa menambah pilihan yang tidak perlu.",
+          href: "/home",
+          label: "Kembali ke beranda",
+        };
 
   return (
     <motion.div
@@ -146,7 +175,48 @@ export default function PengaturanPage() {
         subtitle="Sesuaikan dengan kebutuhanmu"
       />
 
-      <Card tone="white">
+      <Card tone="cream" className="border border-primary/15">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-card bg-primary-tint text-primary">
+            <Sparkles size={17} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
+              Rahmah sarankan
+            </p>
+            <h2 className="mt-0.5 text-base font-bold text-ink">
+              {recommendedSetting.title}
+            </h2>
+            <p className="mt-1 text-sm leading-relaxed text-ink-soft">
+              {recommendedSetting.body}
+            </p>
+            <Link
+              href={recommendedSetting.href}
+              className="mt-3 inline-flex min-h-10 items-center rounded-pill bg-white px-4 py-2 text-sm font-semibold text-ink shadow-soft hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              {recommendedSetting.label}
+            </Link>
+          </div>
+        </div>
+      </Card>
+
+      <Card tone="white" className="border border-ink/5">
+        <div className="flex items-start gap-3">
+          <ShieldCheck size={17} className="mt-0.5 shrink-0 text-primary" />
+          <div>
+            <h2 className="text-sm font-bold text-ink">
+              Privasi perangkat
+            </h2>
+            <p className="mt-1 text-[11px] leading-relaxed text-ink-soft">
+              Preferensi seperti mode tenang, haid, lokasi, niat, dan penanda
+              lokal disimpan di perangkat ini. Menghapus data lokal tidak
+              menghapus akun atau data yang sudah tersinkron.
+            </p>
+          </div>
+        </div>
+      </Card>
+
+      <Card id="profil" tone="white">
         <h2 className="text-sm font-bold text-ink">Profil</h2>
         <label className="mt-3 block">
           <span className="mb-1 block text-xs font-medium text-ink-soft">
@@ -157,6 +227,7 @@ export default function PengaturanPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Sahabat"
+            autoComplete="nickname"
             className="w-full rounded-card border border-ink/10 bg-background px-4 py-3 text-sm text-ink outline-none focus:border-primary"
           />
         </label>
@@ -177,6 +248,7 @@ export default function PengaturanPage() {
           <button
             type="button"
             role="switch"
+            aria-label="Aktifkan mode tenang"
             aria-checked={quietMode}
             onClick={toggleQuietMode}
             className={
@@ -231,6 +303,7 @@ export default function PengaturanPage() {
           <button
             type="button"
             role="switch"
+            aria-label="Aktifkan warna tajwid"
             aria-checked={tajwid}
             onClick={toggleTajwid}
             className={
@@ -356,6 +429,7 @@ export default function PengaturanPage() {
           <button
             type="button"
             role="switch"
+            aria-label="Aktifkan mode haid"
             aria-checked={haid}
             onClick={toggleHaid}
             className={
@@ -410,15 +484,17 @@ export default function PengaturanPage() {
         )}
       </Card>
 
-      <Button fullWidth size="lg" onClick={save}>
-        {saved ? (
-          <>
-            <Check size={16} /> Tersimpan
-          </>
-        ) : (
-          "Simpan perubahan"
-        )}
-      </Button>
+      <div className="sticky bottom-20 z-20 -mx-1 rounded-pill bg-white/90 p-1.5 shadow-soft-lg backdrop-blur">
+        <Button fullWidth size="lg" onClick={save} aria-live="polite">
+          {saved ? (
+            <>
+              <Check size={16} /> Tersimpan
+            </>
+          ) : (
+            "Simpan perubahan"
+          )}
+        </Button>
+      </div>
 
       <Card tone="cream" className="border border-ink/5">
         <h2 className="text-sm font-bold text-ink">Lainnya</h2>
