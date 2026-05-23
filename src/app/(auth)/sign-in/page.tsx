@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Blob } from "@/components/illustrations/Blob";
@@ -53,6 +53,7 @@ export default function SignInPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!loading && user) router.replace("/home");
@@ -125,6 +126,11 @@ export default function SignInPage() {
         <p className="mb-2 text-ink-soft">
           {mode === "signup" ? t.signIn.subtitleSignUp : t.signIn.subtitle}
         </p>
+        <p className="mb-4 rounded-card bg-primary-tint px-3 py-2 text-xs leading-relaxed text-ink-soft">
+          Rahmah akan membawamu kembali ke langkah terakhir setelah masuk.
+          Pilih Google untuk cara tercepat, atau gunakan email jika ingin
+          menyimpan akun dengan sandi.
+        </p>
         {!configured && (
           <p className="mb-4 rounded-card bg-accent-tint px-3 py-2 text-xs text-ink-soft">
             Mode demo: kunci Firebase belum dikonfigurasi. Login akan disimpan
@@ -140,18 +146,44 @@ export default function SignInPage() {
               icon="mail"
               value={email}
               onChange={setEmail}
+              autoComplete="email"
               required
             />
             <Field
               label={t.signIn.passwordLabel}
-              type="password"
+              type={showPassword ? "text" : "password"}
               icon="lock"
               value={password}
               onChange={setPassword}
+              autoComplete={mode === "signup" ? "new-password" : "current-password"}
+              minLength={6}
+              trailing={
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? "Sembunyikan sandi" : "Tampilkan sandi"}
+                  className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-ink-muted hover:bg-ink/5 hover:text-ink"
+                >
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              }
               required
             />
             {error && (
-              <p className="text-xs text-rose-500">{error}</p>
+              <div
+                role="alert"
+                className="rounded-card bg-rose-50 px-3 py-2 text-xs leading-relaxed text-rose-500"
+              >
+                <p>{error}</p>
+                {mode === "signin" && (
+                  <Link
+                    href="/reset-password"
+                    className="mt-1 inline-flex font-semibold text-rose-600 underline"
+                  >
+                    Reset sandi
+                  </Link>
+                )}
+              </div>
             )}
             <Button type="submit" fullWidth size="lg" disabled={busy}>
               {busy ? (
@@ -162,6 +194,11 @@ export default function SignInPage() {
                 t.signIn.submit
               )}
             </Button>
+            <p className="text-center text-[11px] leading-relaxed text-ink-muted">
+              {mode === "signup"
+                ? "Gunakan minimal 6 karakter agar akun bisa dibuat."
+                : "Lupa sandi? Reset dulu, lalu Rahmah akan membawamu kembali."}
+            </p>
             {mode === "signin" && (
               <div className="text-center">
                 <Link
@@ -213,6 +250,9 @@ function Field({
   icon,
   value,
   onChange,
+  autoComplete,
+  minLength,
+  trailing,
   required,
 }: {
   label: string;
@@ -220,6 +260,9 @@ function Field({
   icon?: "mail" | "lock";
   value: string;
   onChange: (v: string) => void;
+  autoComplete?: string;
+  minLength?: number;
+  trailing?: React.ReactNode;
   required?: boolean;
 }) {
   const Icon = icon === "mail" ? Mail : icon === "lock" ? Lock : null;
@@ -239,11 +282,14 @@ function Field({
           type={type}
           value={value}
           required={required}
+          autoComplete={autoComplete}
+          minLength={minLength}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full rounded-card border border-ink/10 bg-background py-3 pr-4 text-sm text-ink outline-none transition-colors focus:border-primary ${
+          className={`w-full rounded-card border border-ink/10 bg-background py-3 text-sm text-ink outline-none transition-colors focus:border-primary ${
             Icon ? "pl-10" : "pl-4"
-          }`}
+          } ${trailing ? "pr-12" : "pr-4"}`}
         />
+        {trailing}
       </div>
     </label>
   );

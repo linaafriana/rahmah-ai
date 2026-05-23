@@ -125,6 +125,8 @@ export default function ResetPasswordPage() {
                     type="email"
                     required
                     autoFocus
+                    autoComplete="email"
+                    inputMode="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="kamu@email.com"
@@ -133,11 +135,22 @@ export default function ResetPasswordPage() {
                 </div>
               </label>
 
-              {error && <p className="text-xs text-rose-500">{error}</p>}
+              {error && (
+                <div
+                  role="alert"
+                  className="rounded-card bg-rose-50 px-3 py-2 text-xs leading-relaxed text-rose-500"
+                >
+                  {error}
+                </div>
+              )}
 
               <Button type="submit" fullWidth size="lg" disabled={busy}>
-                {t.signIn.resetSubmit}
+                {busy ? "Mengirim..." : t.signIn.resetSubmit}
               </Button>
+              <p className="text-center text-[11px] leading-relaxed text-ink-muted">
+                Kalau email tidak masuk, cek folder spam atau kembali ke halaman
+                masuk dan gunakan Google.
+              </p>
             </form>
           </Card>
         )}
