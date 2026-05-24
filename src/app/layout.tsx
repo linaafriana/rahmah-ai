@@ -1,9 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Amiri } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AuthProvider } from "@/providers/AuthProvider";
 import "./globals.css";
+
+// Google Analytics (GA4). Hardcoded measurement ID — it's a public
+// client-side identifier, safe to commit. Loaded via next/script with
+// afterInteractive so it never blocks first paint.
+const GA_ID = "G-L1QQFNTGBP";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ??
@@ -82,6 +88,18 @@ export default function RootLayout({
         <AuthProvider>{children}</AuthProvider>
         <Analytics />
         <SpeedInsights />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );
